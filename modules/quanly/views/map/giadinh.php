@@ -231,7 +231,7 @@ LeafletMapAsset::register($this);
                         // });
 
                         // Create WMS layers
-                        var wmsLoogerLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsLoogerLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_data_logger',
                             format: 'image/png',
                             transparent: true,
@@ -239,7 +239,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         });
 
-                        var wmsDonghoKhLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsDonghoKhLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_dongho_kh_gd',
                             format: 'image/png',
                             transparent: true,
@@ -248,7 +248,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsDonghoTongLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsDonghoTongLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_dongho_tong_gd',
                             format: 'image/png',
                             transparent: true,
@@ -256,7 +256,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsHamLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsHamLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_hamkythuat',
                             format: 'image/png',
                             transparent: true,
@@ -264,7 +264,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsOngCaiLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsOngCaiLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_ongcai',
                             format: 'image/png',
                             transparent: true,
@@ -272,7 +272,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22
                         }).addTo(map);
 
-                        var wmsOngCaiDHLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsOngCaiDHLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_ongcai',
                             format: 'image/png',
                             transparent: true,
@@ -281,7 +281,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsOngNganhLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsOngNganhLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_ongnganh',
                             format: 'image/png',
                             transparent: true,
@@ -290,7 +290,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsTrambomLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsTrambomLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_trambom',
                             format: 'image/png',
                             transparent: true,
@@ -298,7 +298,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsTramCuuHoaLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsTramCuuHoaLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_tramcuuhoa',
                             format: 'image/png',
                             transparent: true,
@@ -307,7 +307,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsVanPhanPhoiLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsVanPhanPhoiLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_vanphanphoi',
                             format: 'image/png',
                             transparent: true,
@@ -316,7 +316,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsSucoLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsSucoLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_suco',
                             format: 'image/png',
                             transparent: true,
@@ -326,7 +326,7 @@ LeafletMapAsset::register($this);
                         }).addTo(map);
 
                         //nền
-                                                var wmsGTLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                                                var wmsGTLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_giaothong',
                             format: 'image/png',
                             transparent: true,
@@ -334,7 +334,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsTDLayer = L.tileLayer.wms('http://localhost:8080/geoserver/giadinh/wms', {
+                        var wmsTDLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_thuadat',
                             format: 'image/png',
                             transparent: true,
@@ -381,15 +381,15 @@ var legendControl = L.control({ position: 'bottomright' });
 legendControl.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'legend');
     div.innerHTML += '<h4>Legend</h4>';
-    div.innerHTML += '<img src="http://localhost:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_dongho_kh_gd"> Đồng hồ KH<br>';
-    div.innerHTML += '<img src="http://localhost:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_dongho_tong_gd"> Đồng hồ tổng<br>';
-    div.innerHTML += '<img src="http://localhost:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_trambom"> Trạm bơm<br>';
-    div.innerHTML += '<img src="http://localhost:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_tramcuuhoa"> Trạm cứu hỏa<br>';
-    div.innerHTML += '<img src="http://localhost:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_vanphanphoi"> Van phân phối<br>';
-    div.innerHTML += '<img src="http://localhost:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_hamkythuat"> Hầm kỹ thuật<br>';
-    div.innerHTML += '<img src="http://localhost:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_ongcai"> Ống cái<br>';
-    div.innerHTML += '<img src="http://localhost:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_ongnganh"> Ống ngánh<br>';
-    div.innerHTML += '<img src="http://localhost:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_suco"> Sự cố<br>';
+    div.innerHTML += '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_dongho_kh_gd"> Đồng hồ KH<br>';
+    div.innerHTML += '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_dongho_tong_gd"> Đồng hồ tổng<br>';
+    div.innerHTML += '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_trambom"> Trạm bơm<br>';
+    div.innerHTML += '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_tramcuuhoa"> Trạm cứu hỏa<br>';
+    div.innerHTML += '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_vanphanphoi"> Van phân phối<br>';
+    div.innerHTML += '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_hamkythuat"> Hầm kỹ thuật<br>';
+    div.innerHTML += '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_ongcai"> Ống cái<br>';
+    div.innerHTML += '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_ongnganh"> Ống ngánh<br>';
+    div.innerHTML += '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_suco"> Sự cố<br>';
     return div;
 };
 
