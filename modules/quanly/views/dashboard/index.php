@@ -50,7 +50,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
                 </div>
                 <div class="block-content p-4">
                     <div class="fs-1 fw-bold text-primary"><?= $thongke['van_mangluoi'] ?></div>
-                    <a href="<?= Url::to(['quanly/capnuocgd/gd-vanphanphoi/index']) ?>" class="btn btn-outline-primary mt-2">Xem chi tiết</a>
+                    <a href="<?= Url::to(['capnuocgd/gd-vanphanphoi/index']) ?>" class="btn btn-outline-primary mt-2">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
                 </div>
                 <div class="block-content p-4">
                     <div class="fs-1 fw-bold text-success"><?= $thongke['nhamay_nuoc'] ?></div>
-                    <a href="<?= Url::to(['quanly/capnuocgd/gd-dongho-tong-gd/index']) ?>" class="btn btn-outline-success mt-2">Xem chi tiết</a>
+                    <a href="<?= Url::to(['capnuocgd/gd-dongho-tong-gd/index']) ?>" class="btn btn-outline-success mt-2">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -74,7 +74,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
                 </div>
                 <div class="block-content p-4">
                     <div class="fs-1 fw-bold text-warning"><?= $thongke['dongho_kh'] ?></div>
-                    <a href="<?= Url::to(['quanly/capnuocgd/gd-dongho-kh-gd/index']) ?>" class="btn btn-outline-warning mt-2">Xem chi tiết</a>
+                    <a href="<?= Url::to(['capnuocgd/gd-dongho-kh-gd/index']) ?>" class="btn btn-outline-warning mt-2">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -86,7 +86,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
                 </div>
                 <div class="block-content p-4">
                     <div class="fs-1 fw-bold text-info"><?= $thongke['ong_phanphoi'] ?></div>
-                    <a href="<?= Url::to(['quanly/capnuocgd/gd-ongnganh/index']) ?>" class="btn btn-outline-info mt-2">Xem chi tiết</a>
+                    <a href="<?= Url::to(['capnuocgd/gd-ongnganh/index']) ?>" class="btn btn-outline-info mt-2">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -98,7 +98,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
                 </div>
                 <div class="block-content p-4">
                     <div class="fs-1 fw-bold text-danger"><?= $thongke['suco'] ?></div>
-                    <a href="<?= Url::to(['quanly/capnuocgd/gd-suco/index']) ?>" class="btn btn-outline-danger mt-2">Xem chi tiết</a>
+                    <a href="<?= Url::to(['capnuocgd/gd-suco/index']) ?>" class="btn btn-outline-danger mt-2">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
                 </div>
                 <div class="block-content p-4">
                     <div class="fs-1 fw-bold text-secondary"><?= $thongke['pccc'] ?></div>
-                    <a href="<?= Url::to(['quanly/capnuocgd/gd-tramcuuhoa/index']) ?>" class="btn btn-outline-secondary mt-2">Xem chi tiết</a>
+                    <a href="<?= Url::to(['capnuocgd/gd-tramcuuhoa/index']) ?>" class="btn btn-outline-secondary mt-2">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -122,7 +122,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
                 </div>
                 <div class="block-content p-4">
                     <div class="fs-1 fw-bold text-primary"><?= $thongke['trambom'] ?></div>
-                    <a href="<?= Url::to(['quanly/capnuocgd/gd-trambom/index']) ?>" class="btn btn-outline-primary mt-2">Xem chi tiết</a>
+                    <a href="<?= Url::to(['capnuocgd/gd-trambom/index']) ?>" class="btn btn-outline-primary mt-2">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -134,7 +134,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
                 </div>
                 <div class="block-content p-4">
                     <div class="fs-1 fw-bold text-dark"><?= $thongke['ham'] ?></div>
-                    <a href="<?= Url::to(['quanly/capnuocgd/gd-hamkythuat/index']) ?>" class="btn btn-outline-dark mt-2">Xem chi tiết</a>
+                    <a href="<?= Url::to(['capnuocgd/gd-hamkythuat/index']) ?>" class="btn btn-outline-dark mt-2">Xem chi tiết</a>
                 </div>
             </div>
         </div>

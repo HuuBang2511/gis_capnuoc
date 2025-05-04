@@ -184,13 +184,13 @@ class APPConfig
             ],
         ],
         'map' => [
-            [
-                'name' => 'Cấp nước Đức Trọng',
-                'icon' => 'fa fa-list',
-                'url' => 'quanly/map/ductrong',
-                'key'=>'quanly.map.ductrong',
-                'hasChild' => false,
-            ],
+            // [
+            //     'name' => 'Cấp nước Đức Trọng',
+            //     'icon' => 'fa fa-list',
+            //     'url' => 'quanly/map/ductrong',
+            //     'key'=>'quanly.map.ductrong',
+            //     'hasChild' => false,
+            // ],
             [
                 'name' => 'Cấp nước Sai Gon Water',
                 'icon' => 'fa fa-list',
