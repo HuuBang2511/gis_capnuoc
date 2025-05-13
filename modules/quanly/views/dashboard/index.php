@@ -141,19 +141,8 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
     </div>
 
     <!-- Bản đồ GIS -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="block block-themed">
-                <div class="block-header bg-info">
-                    <h3 class="block-title">Bản đồ Hạ tầng Cấp Nước</h3>
-                </div>
-                <div class="block-content">
-                    <div id="map"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
+    <div id="chartdiv"></div>
     <!-- Biểu đồ -->
     <div class="row mt-4">
         <div class="col-12 col-xl-6">
@@ -1518,20 +1507,20 @@ am4core.ready(function() {
 </script>
 
 <!-- HTML -->
-<div id="chartdiv"></div>
+
 
 
 <script>
     // Đảm bảo Chart.js đã tải trước khi khởi tạo
     document.addEventListener('DOMContentLoaded', function() {
         // Khởi tạo Bản đồ
-        var map = L.map('map').setView([10.7769, 106.7009], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-        L.marker([10.7769, 106.7009]).addTo(map).bindPopup('Trạm Bơm Chính');
-        L.marker([10.7800, 106.7100]).addTo(map).bindPopup('Van Phân Phối');
-        L.marker([10.7700, 106.6900]).addTo(map).bindPopup('Sự cố Rò rỉ');
+        // var map = L.map('map').setView([10.7769, 106.7009], 13);
+        // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // }).addTo(map);
+        // L.marker([10.7769, 106.7009]).addTo(map).bindPopup('Trạm Bơm Chính');
+        // L.marker([10.7800, 106.7100]).addTo(map).bindPopup('Van Phân Phối');
+        // L.marker([10.7700, 106.6900]).addTo(map).bindPopup('Sự cố Rò rỉ');
 
         // Biểu đồ Tiêu thụ Nước
         const ctx = document.getElementById('water-consumption-chart').getContext('2d');
