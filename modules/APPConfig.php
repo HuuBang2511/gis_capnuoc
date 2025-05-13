@@ -162,7 +162,7 @@ class APPConfig
                 'hasChild' => false,
             ],
             [
-                'name' => 'ống truyền dẫn',
+                'name' => 'DMA',
                 'icon' => 'fa fa-list',
                 'url' => 'quanly/capnuocgd/DMA',
                 'key'=>'quanly.capnuocgd/DMA.index',
