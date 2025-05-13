@@ -33,6 +33,8 @@ class DashboardController extends QuanlyBaseController
         $thongke['trambom'] = GdTrambom::find()->count();
         $thongke['ham'] = GdHamkythuat::find()->count();
 
+        
+
         return $this->render('index', [
             'thongke' => $thongke,
         ]);
