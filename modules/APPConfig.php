@@ -164,8 +164,8 @@ class APPConfig
             [
                 'name' => 'DMA',
                 'icon' => 'fa fa-list',
-                'url' => 'quanly/capnuocgd/DMA',
-                'key'=>'quanly.capnuocgd/DMA.index',
+                'url' => 'quanly/capnuocgd/dma',
+                'key'=>'quanly.capnuocgd/dma.index',
                 'hasChild' => false,
             ],
             [
