@@ -155,6 +155,20 @@ class APPConfig
                 'hasChild' => false,
             ],
             [
+                'name' => 'ống truyền dẫn',
+                'icon' => 'fa fa-list',
+                'url' => 'quanly/capnuocgd/ongtruyendan',
+                'key'=>'quanly.capnuocgd/ongtruyendan.index',
+                'hasChild' => false,
+            ],
+            [
+                'name' => 'ống truyền dẫn',
+                'icon' => 'fa fa-list',
+                'url' => 'quanly/capnuocgd/DMA',
+                'key'=>'quanly.capnuocgd/DMA.index',
+                'hasChild' => false,
+            ],
+            [
                 'name' => 'Trạm bơm',
                 'icon' => 'fa fa-list',
                 'url' => 'quanly/capnuocgd/gd-trambom',
