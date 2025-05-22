@@ -181,12 +181,55 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js', ['position' => \y
 <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/maps.js"></script>
-<script src="https://cdn.amcharts.com/lib/4/geodata/usaLow.js"></script>
-<script src="https://covid.amcharts.com/data/js/us_timeline.js"></script>
-<script src="https://covid.amcharts.com/data/js/us_total_timeline.js"></script>
-<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
 <!-- Chart code -->
+<script>
+am4internal_webpackJsonp(
+    ["4f3f"], {
+        hPIJ: function(e, t, o) {
+            "use strict";
+            Object.defineProperty(t, "__esModule", { value: !0 });
+            var a = {
+                type: "FeatureCollection",
+                features: 
+                [
+                    <?php foreach($dataMap as $i => $item): ?>
+                        {
+                            type: "Feature",
+                            geometry: {
+                                type: "MultiPolygon",
+                                coordinates: [[<?=$item['coordinates'] ?>]],
+                            },
+                            properties: {
+                                name: "<?= $item['name'] ?>",
+                                id: "<?= $item['id'] ?>",
+                                CNTRY: "Việt Nam",
+                                TYPE: "State",
+                            },
+                            id: "<?= $item['id'] ?>",
+                        },
+                    <?php endforeach; ?>
+                ]
+
+            
+            }
+            window.am4geodata_usaLow = a;
+        },
+    }, ["hPIJ"]
+);
+
+</script>
+
+<script>
+
+
+</script>
+
+
+<script src="<?= Yii::$app->homeUrl ?>js/data.js"></script>
+<script src="<?= Yii::$app->homeUrl ?>js/data_total.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
 <script>
 am4core.ready(function() {
 
@@ -195,60 +238,13 @@ am4core.useTheme(am4themes_animated);
 // Themes end
 
 am4core.ready(function() {
-
   var populations = {
-    'US-AL': 4887871,
-    'US-AK': 737438,
-    'US-AZ': 7171646,
-    'US-AR': 3013825,
-    'US-CA': 39557045,
-    'US-CO': 5695564,
-    'US-CT': 3572665,
-    'US-DE': 967171,
-    'US-DC': 702455,
-    'US-FL': 21299325,
-    'US-GA': 10519475,
-    'US-HI': 1420491,
-    'US-ID': 1754208,
-    'US-IL': 12741080,
-    'US-IN': 6691878,
-    'US-IA': 3156145,
-    'US-KS': 2911505,
-    'US-KY': 4468402,
-    'US-LA': 4659978,
-    'US-ME': 1338404,
-    'US-MD': 6042718,
-    'US-MA': 6902149,
-    'US-MI': 9995915,
-    'US-MN': 5611179,
-    'US-MS': 2986530,
-    'US-MO': 6126452,
-    'US-MT': 1062305,
-    'US-NE': 1929268,
-    'US-NV': 3034392,
-    'US-NH': 1356458,
-    'US-NJ': 8908520,
-    'US-NM': 2095428,
-    'US-NY': 19542209,
-    'US-NC': 10383620,
-    'US-ND': 760077,
-    'US-OH': 11689442,
-    'US-OK': 3943079,
-    'US-OR': 4190713,
-    'US-PA': 12807060,
-    'US-RI': 1057315,
-    'US-SC': 5084127,
-    'US-SD': 882235,
-    'US-TN': 6770010,
-    'US-TX': 28701845,
-    'US-UT': 3161105,
-    'US-VT': 626299,
-    'US-VA': 8517685,
-    'US-WA': 7535591,
-    'US-WV': 1805832,
-    'US-WI': 5813568,
-    'US-WY': 577737,
-    'US-PR': 3195153
+    'QN2501': 3195153,
+    'QN2502': 5777373,
+    'QN2506': 1805832,
+    'QN2505': 8517685,
+    'QN2504': 3161105,
+    'QN2503': 3161105,
   }
 
 
@@ -268,10 +264,10 @@ am4core.ready(function() {
   var activeCountryColor = am4core.color("#0f0f0f");
 
   var currentIndex;
-  var currentCountry = "United States (Total)";
+  var currentCountry = "Cấp nước (total)";
 
   // last date of the data
-  var lastDate = new Date(covid_us_total_timeline[covid_us_total_timeline.length - 1].date);
+  var lastDate = new Date(data_total_timeline[data_total_timeline.length - 1].date);
   var currentDate = lastDate;
 
   var currentPolygon;
@@ -292,20 +288,22 @@ am4core.ready(function() {
 
   // make a map of country indexes for later use
   var countryIndexMap = {};
-  var list = covid_us_timeline[covid_us_timeline.length - 1].list;
+  var list = data_timeline[data_timeline.length - 1].list;
   for (var i = 0; i < list.length; i++) {
     var country = list[i]
     countryIndexMap[country.id] = i;
   }
 
+  console.log(countryIndexMap);
+
   // function that returns current slide
   // if index is not set, get last slide
   function getSlideData(index) {
     if (index == undefined) {
-      index = covid_us_timeline.length - 1;
+      index = data_timeline.length - 1;
     }
 
-    var data = covid_us_timeline[index];
+    var data = data_timeline[index];
 
     return data;
   }
@@ -313,8 +311,12 @@ am4core.ready(function() {
   // get slide data
   var slideData = getSlideData();
 
-  // as we will be modifying raw data, make a copy
+  console.log(slideData)
+
+  // as we will be modifying raw data, make a copy // dữ liệu
   var mapData = JSON.parse(JSON.stringify(slideData.list));
+
+  console.log(mapData);
 
   // remove items with 0 values for better performance
   for (var i = mapData.length - 1; i >= 0; i--) {
@@ -380,10 +382,12 @@ am4core.ready(function() {
   // you can use more accurate world map or map of any other country - a wide selection of maps available at: https://github.com/amcharts/amcharts4-geodata
   mapChart.geodata = am4geodata_usaLow;
 
+  console.log(mapChart);
+
   // Set projection
   // https://www.amcharts.com/docs/v4/chart-types/map/#Setting_projection
   // instead of Miller, you can use Mercator or many other projections available: https://www.amcharts.com/demos-v4/map-using-d3-projections/
-  mapChart.projection = new am4maps.projections.AlbersUsa();
+  mapChart.projection = new am4maps.projections.Mercator(); // thay đổi cái này để dùng map nếu lỗi
   mapChart.panBehavior = "move";
 
   // Map polygon series (defines how country areas look and behave)
@@ -435,12 +439,15 @@ am4core.ready(function() {
 
   // Bubble series
   var bubbleSeries = mapChart.series.push(new am4maps.MapImageSeries());
+
+  console.log(bubbleSeries);
+
   bubbleSeries.data = JSON.parse(JSON.stringify(mapData));
 
   bubbleSeries.dataFields.value = "confirmed";
   bubbleSeries.dataFields.id = "id";
 
-  // adjust tooltip
+  // adjust tooltip // tool tip đối tượng DMA
   bubbleSeries.tooltip.animationDuration = 0;
   bubbleSeries.tooltip.showInViewport = false;
   bubbleSeries.tooltip.background.fillOpacity = 0.2;
@@ -533,7 +540,7 @@ am4core.ready(function() {
   // top title
   var title = mapChart.titles.create();
   title.fontSize = "1.5em";
-  title.text = "COVID-19 U.S. Spread Data";
+  title.text = "Bản đồ cấp nước";
   title.align = "left";
   title.horizontalCenter = "left";
   title.marginLeft = 20;
@@ -647,7 +654,7 @@ am4core.ready(function() {
 
   // what to do when slider is dragged
   slider.events.on("rangechanged", function(event) {
-    var index = Math.round((covid_us_timeline.length - 1) * slider.start);
+    var index = Math.round((data_timeline.length - 1) * slider.start);
     updateMapData(getSlideData(index).list);
     updateTotals(index);
   })
@@ -830,7 +837,7 @@ am4core.ready(function() {
   lineChart.paddingTop = 3;
 
   // make a copy of data as we will be modifying it
-  lineChart.data = JSON.parse(JSON.stringify(covid_us_total_timeline));
+  lineChart.data = JSON.parse(JSON.stringify(data_total_timeline));
 
   // date axis
   // https://www.amcharts.com/docs/v4/concepts/axes/date-axis/
@@ -1256,7 +1263,7 @@ am4core.ready(function() {
   function setCountryData(countryIndex) {
     // instead of setting whole data array, we modify current raw data so that a nice animation would happen
     for (var i = 0; i < lineChart.data.length; i++) {
-      var di = covid_us_timeline[i].list;
+      var di = data_timeline[i].list;
 
       var countryData = di[countryIndex];
       var dataContext = lineChart.data[i];
@@ -1355,7 +1362,7 @@ am4core.ready(function() {
 
     // update line chart data (again, modifying instead of setting new data for a nice animation)
     for (var i = 0; i < lineChart.data.length; i++) {
-      var di = covid_us_total_timeline[i];
+      var di = data_total_timeline[i];
       var dataContext = lineChart.data[i];
       dataContext.confirmed = di.confirmed;
       dataContext.deaths = di.deaths;
@@ -1377,7 +1384,7 @@ am4core.ready(function() {
   // update total values in buttons
   function updateTotals(index) {
     if (!isNaN(index)) {
-      var di = covid_us_total_timeline[index];
+      var di = data_total_timeline[index];
       var date = new Date(di.date);
       currentDate = date;
 

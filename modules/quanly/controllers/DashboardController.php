@@ -18,6 +18,7 @@ use app\modules\quanly\models\capnuocgd\GdSuco;
 use app\modules\quanly\models\capnuocgd\GdTrambom;
 use app\modules\quanly\models\capnuocgd\GdTramcuuhoa;
 use app\modules\quanly\models\capnuocgd\GdHamkythuat;
+use app\modules\quanly\models\capnuocgd\DMA;
 
 class DashboardController extends QuanlyBaseController
 {
@@ -33,10 +34,28 @@ class DashboardController extends QuanlyBaseController
         $thongke['trambom'] = GdTrambom::find()->count();
         $thongke['ham'] = GdHamkythuat::find()->count();
 
-        
+        $dataMap = [];
+
+        $geojsonDma = DMA::find()->select(['st_asgeojson(ST_Transform(geom, 4326))', 'madma'])->orderBy('geom')->asArray()->all();
+
+        //dd($geojsonDma);
+        foreach($geojsonDma as $i => $item){
+            $geojson = json_decode($item['st_asgeojson']);
+            //dd($geojson->coordinates[0][0]);
+            $dataMap[] = [
+                "coordinates" => json_encode($geojson->coordinates[0][0]),
+                "name" => $item['madma'],
+                "id" => $item['madma'],
+            ];
+        }
+
+        //dd(($dataMap));
+
+
 
         return $this->render('index', [
             'thongke' => $thongke,
+            'dataMap' => $dataMap,
         ]);
     }
 }
