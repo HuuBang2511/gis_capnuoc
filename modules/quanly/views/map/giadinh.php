@@ -22,6 +22,12 @@ LeafletMapAsset::register($this);
                         var map = L.map('map', {defaultExtentControl: true}).setView(center, 16);
 
                         var baseMaps = {
+                            // "Bản đồ nền" : L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            //     layers: 'giscapnuoc:basemap_capnuoc',
+                            //     format: 'image/png',
+                            //     transparent: true,
+                               
+                            // }).addTo(map),
                             "Bản đồ Google": L.tileLayer('http://{s}.google.com/vt/lyrs=' + 'r' + '&x={x}&y={y}&z={z}', {
                                 maxZoom: 22,
                                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
@@ -197,7 +203,21 @@ LeafletMapAsset::register($this);
                                                     "</table>" +
                                                     "</div>";
                                                 break;
-                                                case 'giadinh:gd_suco':
+                                            // case 'giadinh:gd_suco':
+                                            //     var popupContent = "<div class='popup-content'>" +
+                                            //         "<table>" +
+                                            //         "<tr><td><strong>Mã sự cố:</strong></td><td>" + properties.masuco + "</td></tr>" +
+                                            //         "<tr><td><strong>Số nhà:</strong></td><td>" + properties.sonha + "</td></tr>" +
+                                            //         "<tr><td><strong>Đường:</strong></td><td>" + properties.duong + "</td></tr>" +
+                                            //         "<tr><td><strong>Ngày phát hiện:</strong></td><td>" + properties.ngayphathien + "</td></tr>" +
+                                            //         "<tr><td><strong>Người phát hiện:</strong></td><td>" + properties.nguoiphathien + "</td></tr>" +
+                                            //         "<tr><td><strong>Ngày sửa chữa:</strong></td><td>" + properties.ngaysuachua + "</td></tr>" +
+                                            //         "<tr><td><strong>Đơn vị:</strong></td><td>" + properties.donvisuachua + "</td></tr>" +
+                                            //         "<tr><td><strong>Vị trí phát hiện:</strong></td><td>" + properties.vitriphathien + "</td></tr>" +
+                                            //         "</table>" +
+                                            //         "</div>";
+                                            //     break;
+                                            case 'giscapnuoc:v2_gd_suco':
                                                 var popupContent = "<div class='popup-content'>" +
                                                     "<table>" +
                                                     "<tr><td><strong>Mã sự cố:</strong></td><td>" + properties.masuco + "</td></tr>" +
@@ -231,6 +251,14 @@ LeafletMapAsset::register($this);
                         // });
 
                         // Create WMS layers
+                        var wmsBase = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:basemap_capnuoc',
+                            format: 'image/png',
+                            transparent: true,
+                            minZoom: 18,
+                            maxZoom: 22 // Đặt maxZoom là 22
+                        }).addTo(map);
+
                         var wmsLoogerLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_data_logger',
                             format: 'image/png',
@@ -316,8 +344,8 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsSucoLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_suco',
+                        var wmsSucoLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:v2_gd_suco',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: 'status = 1',
@@ -361,6 +389,7 @@ LeafletMapAsset::register($this);
 
                         // Add control layers to the map
                         var overlayMaps = {
+                            "Bản đồ nền": wmsBase,
                             "Data logger": wmsLoogerLayer,
                             "Đồng hồ khách hàng": wmsDonghoKhLayer,
                             "Đồng hồ tổng": wmsDonghoTongLayer,
