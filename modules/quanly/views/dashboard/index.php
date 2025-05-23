@@ -222,6 +222,64 @@ am4internal_webpackJsonp(
 
 <script>
 
+function generateRandomTimeline(startDate, days) {
+    const areas = [
+        { id: "QN2501", name: "Khu vực 1", base: 100000 },
+        { id: "QN2502", name: "Khu vực 2", base: 200000 },
+        { id: "QN2503", name: "Khu vực 3", base: 150000 },
+        { id: "QN2504", name: "Khu vực 4", base: 300000 },
+        { id: "QN2505", name: "Khu vực 5", base: 400000 },
+        { id: "QN2506", name: "Khu vực 6", base: 250000 },
+    ];
+
+    let previousSupply = areas.map(a => a.base);
+
+    const data_timeline = [];
+    const data_total_timeline = [];
+
+    for (let i = 0; i < days; i++) {
+        const date = new Date(startDate);
+        date.setDate(date.getDate() + i);
+        const dateStr = date.toISOString().split("T")[0];
+
+        let list = [];
+        let totalSupply = 0;
+        let totalLoss = 0;
+
+        previousSupply = previousSupply.map((supply, index) => {
+            // Thay đổi ngẫu nhiên ±10%
+            const changePercent = (Math.random() * 0.2 - 0.1);
+            let newSupply = Math.round(supply * (1 + changePercent));
+
+            // Thất thoát ngẫu nhiên 5–7%
+            const lossRate = 0.05 + Math.random() * 0.02;
+            const waterLoss = Math.round(newSupply * lossRate);
+
+            list.push({
+                id: areas[index].id,
+                name: areas[index].name,
+                waterSupply: newSupply,
+                waterLoss: waterLoss,
+            });
+
+            totalSupply += newSupply;
+            totalLoss += waterLoss;
+
+            return newSupply;
+        });
+
+        data_timeline.push({ date: dateStr, list });
+        data_total_timeline.push({ date: dateStr, waterSupply: totalSupply, waterLoss: totalLoss });
+    }
+
+    return { data_timeline, data_total_timeline };
+}
+
+// Gọi hàm với 92 ngày (3 tháng)
+const { data_timeline, data_total_timeline } = generateRandomTimeline(new Date("2024-03-22"), 92);
+
+console.log(data_timeline);
+console.log(data_total_timeline);
 
 </script>
 
@@ -269,26 +327,11 @@ am4core.ready(function() {
   //             { id: "QN2506", name: "Area 6", waterSupply: 500000, waterLoss: 25000 },
   //         ],
   //     },
-  //     {
-  //         date: "2024-05-24",
-  //         list: [
-  //             { id: "QN2501", name: "Area 1", waterSupply: 192422, waterLoss: 9621 },
-  //             { id: "QN2502", name: "Area 2", waterSupply: 417455, waterLoss: 20873 },
-  //             { id: "QN2503", name: "Area 3", waterSupply: 289707, waterLoss: 14485 },
-  //             { id: "QN2504", name: "Area 4", waterSupply: 640554, waterLoss: 32028 },
-  //             { id: "QN2505", name: "Area 5", waterSupply: 877450, waterLoss: 43873 },
-  //             { id: "QN2506", name: "Area 6", waterSupply: 521597, waterLoss: 26080 },
-  //         ],
-  //     },
   // ];
-
-  console.log(data_timeline)
 
   // var data_total_timeline = [
   //     { date: "2024-05-22", waterSupply: 1400000, waterLoss: 70000 },
   //     { date: "2024-05-23", waterSupply: 2800000, waterLoss: 140000 },
-  //     { date: "2024-05-24", waterSupply: 2655480, waterLoss: 132774 },
-
   // ];
 
   var numberFormatter = new am4core.NumberFormatter();
@@ -907,7 +950,7 @@ am4core.ready(function() {
     var series = lineChart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = name;
     series.dataFields.dateX = "date";
-    series.name = name === "waterSupply" ? "Sản lượng nước" : "Tỷ lệ thất thoát";
+    series.name = name === "waterSupply" ? "Sản lượng nước" : "Sản lượng nước thất thoát";
     series.strokeOpacity = 0.6;
     series.stroke = color;
     series.fill = color;
@@ -935,7 +978,7 @@ am4core.ready(function() {
     series.tooltip.background.fill = am4core.color("#000000");
     series.tooltip.dy = -4;
     series.tooltip.fontSize = "0.8em";
-    series.tooltipText = "Total {name}: {valueY}";
+    series.tooltipText = "Tổng {name} (m3): {valueY}";
 
     return series;
   }
@@ -953,7 +996,7 @@ am4core.ready(function() {
     series.dataFields.valueY = name;
     series.dataFields.valueYShow = "previousChange";
     series.dataFields.dateX = "date";
-    series.name = name === "waterSupply" ? "Sản lượng nước" : "Tỷ lệ thất thoát";
+    series.name = name === "waterSupply" ? "Sản lượng nước (m3)" : "Sản lượng nước thất thoát (m3)";
     series.hidden = true;
     series.stroke = color;
     series.fill = color;
@@ -1036,7 +1079,7 @@ am4core.ready(function() {
 
   function changeDataType(name) {
     currentType = name;
-    currentTypeName = name === "waterSupply" ? "Sản lượng nước sạch" : "Tỷ lệ thất thoát nước";
+    currentTypeName = name === "waterSupply" ? "Sản lượng nước sạch (m3)" : "Sản lượng thất thoát nước (m3)";
 
     bubbleSeries.mapImages.template.tooltipText = "[bold]{name}: {value}[/] [font-size:10px]\n" + currentTypeName;
 
