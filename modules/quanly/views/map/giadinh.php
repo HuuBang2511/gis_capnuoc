@@ -493,155 +493,156 @@ LeafletMapAsset::register($this);
                                             var properties = geojsonData.features[0].properties;
                                             //console.log(properties);
 
-                                            
-                                            switch (layerName) {
-                                                case 'gd-data-logger':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>Chức năng:</strong></td><td>" + properties.chucnang + "</td></tr>" +
-                                                        "<tr><td><strong>Vị trí:</strong></td><td>" + properties.vitri + "</td></tr>" +
-                                                        "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
-                                                        "<tr><td><strong>Ghi chú:</strong></td><td>" + properties.ghichu + "</td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                case 'gd_dongho_kh_gd':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>Danh bạ:</strong></td><td>" + properties.dbdonghonu + "</td></tr>" +
-                                                        "<tr><td><strong>Số thân đồng:</strong></td><td>" + properties.sothandong + "</td></tr>" +
-                                                        "<tr><td><strong>Tên KH:</strong></td><td>" + properties.tenkhachha + "</td></tr>" +
-                                                        "<tr><td><strong>ĐTDD:</strong></td><td>" + properties.dtdd + "</td></tr>" +
-                                                        "<tr><td><strong>Địa chỉ:</strong></td><td>" + properties.diachi + "</td></tr>" +
-                                                        "<tr><td><strong>Hiệu:</strong></td><td>" + properties.hieudongho + "</td></tr>" +
-                                                        "<tr><td><strong>Vị trí lắp đặt:</strong></td><td>" + properties.vitrilapda + "</td></tr>" +
-                                                        "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
-                                                        "<tr><td><strong>Bản Vẽ:</strong></td><td><p><a href="+"https://api.giadinhwater.vn/dichvu/BanVe.aspx?sodb="+ properties.dbdonghonu+">Hoàn Công</a></p></td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                case 'gd_dongho_tong_gd':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>Hiệu:</strong></td><td>" + properties.hieudongho + "</td></tr>" +
-                                                        "<tr><td><strong>Ngày lắp đặt:</strong></td><td>" + properties.ngaylapdat + "</td></tr>" +
-                                                        "<tr><td><strong>Vị trí:</strong></td><td>" + properties.vitrilapda + "</td></tr>" +
-                                                        "<tr><td><strong>Đơn vị thi công:</strong></td><td>" + properties.donvithico + "</td></tr>" +
-                                                        "<tr><td><strong>Cỡ ĐH:</strong></td><td>" + properties.codongho + "</td></tr>" +
-                                                        "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                case 'gd_hamkythuat':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>Tên hầm:</strong></td><td>" + properties.tenhamkyth + "</td></tr>" +
-                                                        "<tr><td><strong>Kích thước:</strong></td><td>" + properties.kichthuoch + "</td></tr>" +
-                                                        "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrangh + "</td></tr>" +
-                                                        "<tr><td><strong>Ghi chú:</strong></td><td>" + properties.ghichu + "</td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                case 'gd_ongcai':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>Cỡ ống:</strong></td><td>" + properties.coong + "</td></tr>" +
-                                                        "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
-                                                        "<tr><td><strong>Tên công trình:</strong></td><td>" + properties.tencongtri + "</td></tr>" +
-                                                        "<tr><td><strong>Đơn vị thi công:</strong></td><td>" + properties.donvithico + "</td></tr>" +
-                                                        
-                                                        "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
-                                                        "<tr><td><strong>Ghi chú:</strong></td><td>" + properties.ghichu + "</td></tr>" +
-                                                        "<tr><td><strong>Năm lắp đặt:</strong></td><td>" + properties.namlapdat + "</td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                case 'gd_ongnganh':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>ID ống:</strong></td><td>" + properties.idduongong + "</td></tr>" +
-                                                        "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
-                                                        "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
-                                                        "<tr><td><strong>Năm lắp đặt:</strong></td><td>" + properties.namlapdat + "</td></tr>" +
-                                                        "<tr><td><strong>Cống:</strong></td><td>" + properties.coong + "</td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                case 'gd_vanphanphoi':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>ID hầm:</strong></td><td>" + properties.idhamkythu + "</td></tr>" +
-                                                        "<tr><td><strong>cochiakhoa:</strong></td><td>" + properties.cochiakhoa + "</td></tr>" +
-                                                        "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
-                                                        "<tr><td><strong>Mã DMA:</strong></td><td>" + properties.madma + "</td></tr>" +
-                                                        "<tr><td><strong>Vị trí:</strong></td><td>" + properties.vitrivan + "</td></tr>" +
-                                                        "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                case 'gd_trambom':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>Tên:</strong></td><td>" + properties.tentram + "</td></tr>" +
-                                                        "<tr><td><strong>Số lượng bom:</strong></td><td>" + properties.soluongbom + "</td></tr>" +
-                                                        "<tr><td><strong>Đơn vị quản lý:</strong></td><td>" + properties.donviquanl + "</td></tr>" +
-                                                        "<tr><td><strong>Ghi chú:</strong></td><td>" + properties.ghichu + "</td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                case 'gd_tramcuuhoa':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>ID trạm:</strong></td><td>" + properties.idtruhong + "</td></tr>" +
-                                                        "<tr><td><strong>Kích cỡ:</strong></td><td>" + properties.kichco + "</td></tr>" +
-                                                        "<tr><td><strong>Kích thước:</strong></td><td>" + properties.kcmiengphu + "</td></tr>" +
-                                                        "<tr><td><strong>Loại trụ:</strong></td><td>" + properties.loaitruhon + "</td></tr>" +
-                                                        "<tr><td><strong>Hiệu:</strong></td><td>" + properties.hieu + "</td></tr>" +
-                                                        "<tr><td><strong>Tiêu chuẩn:</strong></td><td>" + properties.tieuchuan + "</td></tr>" +
-                                                        "<tr><td><strong>Mã DMA:</strong></td><td>" + properties.madma + "</td></tr>" +
-                                                        "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                // case 'giadinh:gd_suco':
-                                                //     var popupContent = "<div class='popup-content'>" +
-                                                //         "<table>" +
-                                                //         "<tr><td><strong>Mã sự cố:</strong></td><td>" + properties.masuco + "</td></tr>" +
-                                                //         "<tr><td><strong>Số nhà:</strong></td><td>" + properties.sonha + "</td></tr>" +
-                                                //         "<tr><td><strong>Đường:</strong></td><td>" + properties.duong + "</td></tr>" +
-                                                //         "<tr><td><strong>Ngày phát hiện:</strong></td><td>" + properties.ngayphathien + "</td></tr>" +
-                                                //         "<tr><td><strong>Người phát hiện:</strong></td><td>" + properties.nguoiphathien + "</td></tr>" +
-                                                //         "<tr><td><strong>Ngày sửa chữa:</strong></td><td>" + properties.ngaysuachua + "</td></tr>" +
-                                                //         "<tr><td><strong>Đơn vị:</strong></td><td>" + properties.donvisuachua + "</td></tr>" +
-                                                //         "<tr><td><strong>Vị trí phát hiện:</strong></td><td>" + properties.vitriphathien + "</td></tr>" +
-                                                //         "</table>" +
-                                                //         "</div>";
-                                                //     break;
-                                                case 'v2_gd_suco':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>Mã sự cố:</strong></td><td>" + properties.masuco + "</td></tr>" +
-                                                        "<tr><td><strong>Số nhà:</strong></td><td>" + properties.sonha + "</td></tr>" +
-                                                        "<tr><td><strong>Đường:</strong></td><td>" + properties.duong + "</td></tr>" +
-                                                        "<tr><td><strong>Ngày phát hiện:</strong></td><td>" + properties.ngayphathien + "</td></tr>" +
-                                                        "<tr><td><strong>Người phát hiện:</strong></td><td>" + properties.nguoiphathien + "</td></tr>" +
-                                                        "<tr><td><strong>Ngày sửa chữa:</strong></td><td>" + properties.ngaysuachua + "</td></tr>" +
-                                                        "<tr><td><strong>Đơn vị:</strong></td><td>" + properties.donvisuachua + "</td></tr>" +
-                                                        "<tr><td><strong>Vị trí phát hiện:</strong></td><td>" + properties.vitriphathien + "</td></tr>" +
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
-                                                case 'v2_4326_DMA':
-                                                    var popupContent = "<div class='popup-content'>" +
-                                                        "<table>" +
-                                                        "<tr><td><strong>Mã DMA:</strong></td><td>" + properties.madma + "</td></tr>" +
-                                                        "<tr><td><strong>Số van:</strong></td><td>" + properties.sovan + "</td></tr>" +
-                                                        "<tr><td><strong>Số trụ:</strong></td><td>" + properties.sotru + "</td></tr>" +
-                                                        "<tr><td><strong>Số đầu nối:</strong></td><td>" + properties.sodaunoi + "</td></tr>" +
-                                                        
-                                                        "</table>" +
-                                                        "</div>";
-                                                    break;
+                                            if (map.hasLayer(layerName)) {
+                                                switch (layerName) {
+                                                    case 'gd-data-logger':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>Chức năng:</strong></td><td>" + properties.chucnang + "</td></tr>" +
+                                                            "<tr><td><strong>Vị trí:</strong></td><td>" + properties.vitri + "</td></tr>" +
+                                                            "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
+                                                            "<tr><td><strong>Ghi chú:</strong></td><td>" + properties.ghichu + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'gd_dongho_kh_gd':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>Danh bạ:</strong></td><td>" + properties.dbdonghonu + "</td></tr>" +
+                                                            "<tr><td><strong>Số thân đồng:</strong></td><td>" + properties.sothandong + "</td></tr>" +
+                                                            "<tr><td><strong>Tên KH:</strong></td><td>" + properties.tenkhachha + "</td></tr>" +
+                                                            "<tr><td><strong>ĐTDD:</strong></td><td>" + properties.dtdd + "</td></tr>" +
+                                                            "<tr><td><strong>Địa chỉ:</strong></td><td>" + properties.diachi + "</td></tr>" +
+                                                            "<tr><td><strong>Hiệu:</strong></td><td>" + properties.hieudongho + "</td></tr>" +
+                                                            "<tr><td><strong>Vị trí lắp đặt:</strong></td><td>" + properties.vitrilapda + "</td></tr>" +
+                                                            "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
+                                                            "<tr><td><strong>Bản Vẽ:</strong></td><td><p><a href="+"https://api.giadinhwater.vn/dichvu/BanVe.aspx?sodb="+ properties.dbdonghonu+">Hoàn Công</a></p></td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'gd_dongho_tong_gd':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>Hiệu:</strong></td><td>" + properties.hieudongho + "</td></tr>" +
+                                                            "<tr><td><strong>Ngày lắp đặt:</strong></td><td>" + properties.ngaylapdat + "</td></tr>" +
+                                                            "<tr><td><strong>Vị trí:</strong></td><td>" + properties.vitrilapda + "</td></tr>" +
+                                                            "<tr><td><strong>Đơn vị thi công:</strong></td><td>" + properties.donvithico + "</td></tr>" +
+                                                            "<tr><td><strong>Cỡ ĐH:</strong></td><td>" + properties.codongho + "</td></tr>" +
+                                                            "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'gd_hamkythuat':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>Tên hầm:</strong></td><td>" + properties.tenhamkyth + "</td></tr>" +
+                                                            "<tr><td><strong>Kích thước:</strong></td><td>" + properties.kichthuoch + "</td></tr>" +
+                                                            "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrangh + "</td></tr>" +
+                                                            "<tr><td><strong>Ghi chú:</strong></td><td>" + properties.ghichu + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'gd_ongcai':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>Cỡ ống:</strong></td><td>" + properties.coong + "</td></tr>" +
+                                                            "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
+                                                            "<tr><td><strong>Tên công trình:</strong></td><td>" + properties.tencongtri + "</td></tr>" +
+                                                            "<tr><td><strong>Đơn vị thi công:</strong></td><td>" + properties.donvithico + "</td></tr>" +
+                                                            
+                                                            "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
+                                                            "<tr><td><strong>Ghi chú:</strong></td><td>" + properties.ghichu + "</td></tr>" +
+                                                            "<tr><td><strong>Năm lắp đặt:</strong></td><td>" + properties.namlapdat + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'gd_ongnganh':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>ID ống:</strong></td><td>" + properties.idduongong + "</td></tr>" +
+                                                            "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
+                                                            "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
+                                                            "<tr><td><strong>Năm lắp đặt:</strong></td><td>" + properties.namlapdat + "</td></tr>" +
+                                                            "<tr><td><strong>Cống:</strong></td><td>" + properties.coong + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'gd_vanphanphoi':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>ID hầm:</strong></td><td>" + properties.idhamkythu + "</td></tr>" +
+                                                            "<tr><td><strong>cochiakhoa:</strong></td><td>" + properties.cochiakhoa + "</td></tr>" +
+                                                            "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
+                                                            "<tr><td><strong>Mã DMA:</strong></td><td>" + properties.madma + "</td></tr>" +
+                                                            "<tr><td><strong>Vị trí:</strong></td><td>" + properties.vitrivan + "</td></tr>" +
+                                                            "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'gd_trambom':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>Tên:</strong></td><td>" + properties.tentram + "</td></tr>" +
+                                                            "<tr><td><strong>Số lượng bom:</strong></td><td>" + properties.soluongbom + "</td></tr>" +
+                                                            "<tr><td><strong>Đơn vị quản lý:</strong></td><td>" + properties.donviquanl + "</td></tr>" +
+                                                            "<tr><td><strong>Ghi chú:</strong></td><td>" + properties.ghichu + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'gd_tramcuuhoa':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>ID trạm:</strong></td><td>" + properties.idtruhong + "</td></tr>" +
+                                                            "<tr><td><strong>Kích cỡ:</strong></td><td>" + properties.kichco + "</td></tr>" +
+                                                            "<tr><td><strong>Kích thước:</strong></td><td>" + properties.kcmiengphu + "</td></tr>" +
+                                                            "<tr><td><strong>Loại trụ:</strong></td><td>" + properties.loaitruhon + "</td></tr>" +
+                                                            "<tr><td><strong>Hiệu:</strong></td><td>" + properties.hieu + "</td></tr>" +
+                                                            "<tr><td><strong>Tiêu chuẩn:</strong></td><td>" + properties.tieuchuan + "</td></tr>" +
+                                                            "<tr><td><strong>Mã DMA:</strong></td><td>" + properties.madma + "</td></tr>" +
+                                                            "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    // case 'giadinh:gd_suco':
+                                                    //     var popupContent = "<div class='popup-content'>" +
+                                                    //         "<table>" +
+                                                    //         "<tr><td><strong>Mã sự cố:</strong></td><td>" + properties.masuco + "</td></tr>" +
+                                                    //         "<tr><td><strong>Số nhà:</strong></td><td>" + properties.sonha + "</td></tr>" +
+                                                    //         "<tr><td><strong>Đường:</strong></td><td>" + properties.duong + "</td></tr>" +
+                                                    //         "<tr><td><strong>Ngày phát hiện:</strong></td><td>" + properties.ngayphathien + "</td></tr>" +
+                                                    //         "<tr><td><strong>Người phát hiện:</strong></td><td>" + properties.nguoiphathien + "</td></tr>" +
+                                                    //         "<tr><td><strong>Ngày sửa chữa:</strong></td><td>" + properties.ngaysuachua + "</td></tr>" +
+                                                    //         "<tr><td><strong>Đơn vị:</strong></td><td>" + properties.donvisuachua + "</td></tr>" +
+                                                    //         "<tr><td><strong>Vị trí phát hiện:</strong></td><td>" + properties.vitriphathien + "</td></tr>" +
+                                                    //         "</table>" +
+                                                    //         "</div>";
+                                                    //     break;
+                                                    case 'v2_gd_suco':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>Mã sự cố:</strong></td><td>" + properties.masuco + "</td></tr>" +
+                                                            "<tr><td><strong>Số nhà:</strong></td><td>" + properties.sonha + "</td></tr>" +
+                                                            "<tr><td><strong>Đường:</strong></td><td>" + properties.duong + "</td></tr>" +
+                                                            "<tr><td><strong>Ngày phát hiện:</strong></td><td>" + properties.ngayphathien + "</td></tr>" +
+                                                            "<tr><td><strong>Người phát hiện:</strong></td><td>" + properties.nguoiphathien + "</td></tr>" +
+                                                            "<tr><td><strong>Ngày sửa chữa:</strong></td><td>" + properties.ngaysuachua + "</td></tr>" +
+                                                            "<tr><td><strong>Đơn vị:</strong></td><td>" + properties.donvisuachua + "</td></tr>" +
+                                                            "<tr><td><strong>Vị trí phát hiện:</strong></td><td>" + properties.vitriphathien + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'v2_4326_DMA':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>Mã DMA:</strong></td><td>" + properties.madma + "</td></tr>" +
+                                                            "<tr><td><strong>Số van:</strong></td><td>" + properties.sovan + "</td></tr>" +
+                                                            "<tr><td><strong>Số trụ:</strong></td><td>" + properties.sotru + "</td></tr>" +
+                                                            "<tr><td><strong>Số đầu nối:</strong></td><td>" + properties.sodaunoi + "</td></tr>" +
+                                                            
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                }
                                             }
 
                                             var popup = L.popup()
