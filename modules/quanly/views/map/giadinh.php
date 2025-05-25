@@ -16,7 +16,7 @@ LeafletMapAsset::register($this);
                     <div id="map" style="width: 100%; height: 600px; position:relative">></div>
 
                     <script>
-                        var center = [10.804291919691535, 106.69527258767485];
+                        var center = [10.805279349519678, 106.71851132905113];
 
                         // Create the map
                         var map = L.map('map', {defaultExtentControl: true}).setView(center, 16);
@@ -491,7 +491,7 @@ LeafletMapAsset::register($this);
                                             //onsole.log(geojsonData);
 
                                             var properties = geojsonData.features[0].properties;
-                                            console.log(properties);
+                                            //console.log(properties);
 
                                             
                                             switch (layerName) {
@@ -648,9 +648,9 @@ LeafletMapAsset::register($this);
                                             .setLatLng(e.latlng)
                                             .setContent(popupContent)
                                             .openOn(map);
-                                            // highlightLayer.clearLayers(); // Xóa highlight trước đó (nếu có)
-                                            // var highlightedFeature = L.geoJSON(data.features[0]);
-                                            // highlightLayer.addLayer(highlightedFeature);
+                                             highlightLayer.clearLayers(); // Xóa highlight trước đó (nếu có)
+                                             var highlightedFeature = L.geoJSON(geojsonData.features[0]);
+                                             highlightLayer.addLayer(highlightedFeature);
                                         
                                         }
                                     })
