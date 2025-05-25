@@ -493,7 +493,7 @@ LeafletMapAsset::register($this);
                                             var properties = geojsonData.features[0].properties;
                                             //console.log(properties);
 
-                                            if (map.hasLayer(layerName)) {
+                                            //if (map.hasLayer(layerName)) {
                                                 switch (layerName) {
                                                     case 'gd-data-logger':
                                                         var popupContent = "<div class='popup-content'>" +
@@ -643,7 +643,7 @@ LeafletMapAsset::register($this);
                                                             "</div>";
                                                         break;
                                                 }
-                                            }
+                                            //}
 
                                             var popup = L.popup()
                                             .setLatLng(e.latlng)
