@@ -19,6 +19,7 @@ use app\modules\quanly\models\capnuocgd\GdTrambom;
 use app\modules\quanly\models\capnuocgd\GdTramcuuhoa;
 use app\modules\quanly\models\capnuocgd\GdHamkythuat;
 use app\modules\quanly\models\capnuocgd\DMA;
+use Yii;
 
 class DashboardController extends QuanlyBaseController
 {
@@ -49,13 +50,67 @@ class DashboardController extends QuanlyBaseController
             ];
         }
 
-        //dd(($dataMap));
+        $sovanDma = Yii::$app->db
+        ->createCommand('
+        SELECT id, madma as name, sovan as value  FROM "v2_4326_DMA"  order by madma
+        ')
+        ->queryAll();
+
+
+        //dd(($sovanDma));
 
 
 
         return $this->render('index', [
             'thongke' => $thongke,
             'dataMap' => $dataMap,
+            'sovanDma' => $sovanDma,
         ]);
     }
+
+    public function actionGeojson(){
+        $dmas = Yii::$app->db->createCommand('SELECT st_asgeojson(geom) as geometry, madma as ten, id  FROM "v2_4326_DMA" order by madma')->queryAll();
+
+        $g  = [];
+
+        foreach ($dmas as $i => $dma) {
+            $geometry = json_decode($dma['geometry'], true);
+            $g[$i] = [
+                'type' => 'Feature',
+                'id' => $dma['id'],
+                'properties' => [
+                    'name' => $dma['ten'],
+                ],
+                'geometry' => [
+                    'type' => $geometry['type'],
+                    'coordinates' => $geometry['coordinates'],
+                ]
+            ];
+        }
+
+        $e = [
+            'type' => 'FeatureCollection',
+            'features' => $g
+        ];
+
+        //dd($e);
+        return json_encode($e, JSON_UNESCAPED_UNICODE);
+
+        //dd($results);
+    }
+
+    public function actionChitietdma($id){
+
+        
+
+      
+       
+
+       return $this->renderAjax('chitietdma', [
+           'id'=>$id,
+           
+       ]); 
+   }
+
+
 }
