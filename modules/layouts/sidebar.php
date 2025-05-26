@@ -24,7 +24,7 @@ $user_id = Yii::$app->user->id;
     <div class="bg-gray-lighter">
         <div class="content-header bg-primary-darker">
             <a class="font-w600 text-white tracking-wide logo-default" href="<?= Yii::$app->homeUrl ?>">
-                <img src="https://baotrihethongcapnuoc.com/public/upload/logo.png"
+                <img src="<?= Yii::$app->homeUrl ?>resources/images/logo_hpngis.png"
                      alt="logo"
                      class="logo-default py-2">
             </a>

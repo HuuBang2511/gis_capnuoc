@@ -275,90 +275,99 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         });
 
-                        var wmsLoogerLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_data_logger',
+                        var wmsLoogerLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_data_logger',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: 'status = 1',
                             maxZoom: 22 // Đặt maxZoom là 22
                         });
 
-                        var wmsDonghoKhLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_dongho_kh_gd',
+                        var wmsDonghoKhLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_dongho_kh_gd',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: 'status = 1',
                             minZoom: 18,
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
-                        var wmsDonghoTongLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_dongho_tong_gd',
+                        var wmsDonghoTongLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_dongho_tong_gd',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: 'status = 1',
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
-                        var wmsHamLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_hamkythuat',
+                        var wmsHamLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_hamkythuat',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: 'status = 1',
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
-                        var wmsOngCaiLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_ongcai',
+                        var wmsOngCaiLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_ongcai',
                             format: 'image/png',
                             transparent: true,
-                            CQL_FILTER: "status = 1 AND tinhtrang <> 'DH'", // Áp dụng điều kiện lọc tinhtrang khác 'DH'
+                            //CQL_FILTER: "status = 1 AND tinhtrang <> 'DH'", // Áp dụng điều kiện lọc tinhtrang khác 'DH'
                             maxZoom: 22
                         }).addTo(map);
 
-                        var wmsOngCaiDHLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_ongcai',
+                        var wmsOngCaiDHLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_ongcai',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: "status = 1 AND tinhtrang = 'DH'", // Thêm điều kiện lọc tinhtrang là 'DH'
                             minZoom: 18,
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
-                        var wmsOngNganhLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_ongnganh',
+                        var wmsOngNganhLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_ongnganh',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: 'status = 1',
                             minZoom: 18, // Đặt maxZoom là 22
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
-                        var wmsTrambomLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_trambom',
+                        var wmsOngTruyenDanLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:v2_4326_ONGTRUYENDAN',
+                            format: 'image/png',
+                            transparent: true,
+                            //CQL_FILTER: "status = 1 AND tinhtrang <> 'DH'", // Áp dụng điều kiện lọc tinhtrang khác 'DH'
+                            minZoom: 20,
+                            maxZoom: 22
+                        });
+
+                        var wmsTrambomLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_trambom',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: 'status = 1',
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
-                        var wmsTramCuuHoaLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_tramcuuhoa',
+                        var wmsTramCuuHoaLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_tramcuuhoa',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: 'status = 1',
                             minZoom: 20,
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
-                        var wmsVanPhanPhoiLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
-                            layers: 'giadinh:gd_vanphanphoi',
+                        var wmsVanPhanPhoiLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+                            layers: 'giscapnuoc:gd_vanphanphoi',
                             format: 'image/png',
                             transparent: true,
                             CQL_FILTER: 'status = 1',
                             minZoom: 20,
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
                         var wmsSucoLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
                             layers: 'giscapnuoc:v2_gd_suco',
@@ -367,16 +376,16 @@ LeafletMapAsset::register($this);
                             CQL_FILTER: 'status = 1',
                             minZoom: 20,
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
                         //nền
-                                                var wmsGTLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
+                        var wmsGTLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_giaothong',
                             format: 'image/png',
                             transparent: true,
                             minZoom: 18,
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
                         var wmsTDLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giadinh/wms', {
                             layers: 'giadinh:gd_thuadat',
@@ -384,7 +393,7 @@ LeafletMapAsset::register($this);
                             transparent: true,
                             minZoom: 18,
                             maxZoom: 22 // Đặt maxZoom là 22
-                        }).addTo(map);
+                        });
 
                         var wmsDMA = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
                             layers: 'giscapnuoc:v2_4326_DMA',
@@ -491,11 +500,14 @@ LeafletMapAsset::register($this);
                                             //onsole.log(geojsonData);
 
                                             var properties = geojsonData.features[0].properties;
-                                            //console.log(properties);
+                                            
+                                            // if (layer.wmsParams.layers) {
+                                            //     console.log("Lớp WMS đang bật:", layer.wmsParams.layers);
+                                            // }
 
-                                            //if (map.hasLayer(layerName)) {
+                                            if (layer.wmsParams.layers) {
                                                 switch (layerName) {
-                                                    case 'gd-data-logger':
+                                                    case 'gd_data_logger':
                                                         var popupContent = "<div class='popup-content'>" +
                                                             "<table>" +
                                                             "<tr><td><strong>Chức năng:</strong></td><td>" + properties.chucnang + "</td></tr>" +
@@ -549,7 +561,6 @@ LeafletMapAsset::register($this);
                                                             "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
                                                             "<tr><td><strong>Tên công trình:</strong></td><td>" + properties.tencongtri + "</td></tr>" +
                                                             "<tr><td><strong>Đơn vị thi công:</strong></td><td>" + properties.donvithico + "</td></tr>" +
-                                                            
                                                             "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
                                                             "<tr><td><strong>Ghi chú:</strong></td><td>" + properties.ghichu + "</td></tr>" +
                                                             "<tr><td><strong>Năm lắp đặt:</strong></td><td>" + properties.namlapdat + "</td></tr>" +
@@ -564,6 +575,18 @@ LeafletMapAsset::register($this);
                                                             "<tr><td><strong>Tình trạng:</strong></td><td>" + properties.tinhtrang + "</td></tr>" +
                                                             "<tr><td><strong>Năm lắp đặt:</strong></td><td>" + properties.namlapdat + "</td></tr>" +
                                                             "<tr><td><strong>Cống:</strong></td><td>" + properties.coong + "</td></tr>" +
+                                                            "</table>" +
+                                                            "</div>";
+                                                        break;
+                                                    case 'v2_4326_ONGTRUYENDAN':
+                                                        var popupContent = "<div class='popup-content'>" +
+                                                            "<table>" +
+                                                            "<tr><td><strong>Vật liệu:</strong></td><td>" + properties.vatlieu + "</td></tr>" +
+                                                            "<tr><td><strong>Cỡ ống:</strong></td><td>" + properties.coong + "</td></tr>" +
+                                                            "<tr><td><strong>Tên công trình:</strong></td><td>" + properties.tencongtri + "</td></tr>" +
+                                                            "<tr><td><strong>Năm lắp đặt:</strong></td><td>" + properties.namlapdat + "</td></tr>" +
+                                                            "<tr><td><strong>Đơn vị thiết kế:</strong></td><td>" + properties.donvithiet + "</td></tr>" +
+                                                            "<tr><td><strong>Đơn vị thi công:</strong></td><td>" + properties.donvithico + "</td></tr>" +
                                                             "</table>" +
                                                             "</div>";
                                                         break;
@@ -643,7 +666,7 @@ LeafletMapAsset::register($this);
                                                             "</div>";
                                                         break;
                                                 }
-                                            //}
+                                            }
 
                                             var popup = L.popup()
                                             .setLatLng(e.latlng)
@@ -671,6 +694,7 @@ LeafletMapAsset::register($this);
                             "Ống cái Đang sử dụng": wmsOngCaiLayer,
                             "Ống cái Đã Hủy": wmsOngCaiDHLayer,
                             "Ống ngánh": wmsOngNganhLayer,
+                            "Ống truyền dẫn": wmsOngTruyenDanLayer,
                             "Trạm bơm": wmsTrambomLayer,
                             "Trụ cứu hỏa": wmsTramCuuHoaLayer,
                             "Van phân phối": wmsVanPhanPhoiLayer,

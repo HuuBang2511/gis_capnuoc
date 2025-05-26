@@ -12,7 +12,7 @@ $sidebar = Yii::$app->controller->module->params['adminSidebar'];
             <!-- Logo -->
             <a class="font-w600 text-white tracking-wide" href="/">
                 <?php if (isset(Yii::$app->params['logo'])) : ?>
-                    <img src="<?= Yii::$app->params['logo'] ?>" alt="logo" width="50%" class="logo-default">
+                    <img src="<?= Yii::$app->homeUrl ?>/resources/images/logo_hpn.png" alt="logo" width="50%" class="logo-default">
                 <?php else : ?>
                     <span class="">
                         <?= isset(Yii::$app->params['siteName']) ? Yii::$app->params['siteName'] : 'siteName' ?>
