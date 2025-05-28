@@ -57,9 +57,41 @@ $this->params['breadcrumbs'][] = $this->title;
             <h2 class="block-title"><?= $this->title ?></h2>
         </div>
         <div class="block-content">
-            <div class="row">
+        <div class="row">
                 <div class="col-lg-12">
-                    <div id="map" style="height: 400px"></div>
+                    <?php
+                    if ($model->geojson != null) {
+                        $geojson = json_decode($model->geojson, true);
+                        $center = new LatLng(['lat' => $geojson['coordinates'][1], 'lng' => $geojson['coordinates'][0]]);
+                    } elseif ($model->lat != null) {
+                        $center = new LatLng(['lat' => $model->lat, 'lng' => $model->long]);
+                    }
+                    else {
+                        $center = new LatLng(['lat' => 10.804207610432567, 'lng' => 106.6952618580442]);
+                    }
+                    $marker = new DraggableMarker([
+                        'center' => $center,
+                        'inputX' => '#inputX',
+                        'inputY' => '#inputY',
+                    ]);
+
+                    $basemaps = [];
+                    foreach (APPConfig::$BASEMAP as $i => $item) {
+                        $basemaps[] = new TileLayer($item);
+                    }
+                    $layercontrol = new Layers();
+                    $layercontrol->setBaseLayers($basemaps);
+
+
+                    $leaflet = new LeafletMap([
+                        'center' => $center
+                    ]);
+                    $leaflet->addLayer($basemaps[0]);
+                    $leaflet->addControl($layercontrol);
+                    $leaflet->addLayer($marker);
+
+                    echo $leaflet->widget(['styleOptions' => ['height' => '400px']]);
+                    ?>
                 </div>
             </div>
             <div class="row">

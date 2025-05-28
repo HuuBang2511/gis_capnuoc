@@ -59,7 +59,25 @@ class GdHamkythuatController extends QuanlyBaseController
         $request = Yii::$app->request;
         $model = new GdHamkythuat();
 
-        if ($model->load($request->post()) && $model->save()) {
+        if ($model->load($request->post())) {
+
+            $dataMap = $model->geojson;
+
+            $dataMap = json_decode($dataMap, true);
+            $dataMap = array_values($dataMap);
+            $dataMap = json_encode($dataMap, true);
+
+            $geom_geojson = '{"type":"MultiPolygon","coordinates":' . $dataMap . '}';
+
+            $model->geojson = $geom_geojson;
+
+            $model->save();
+
+            Yii::$app->db
+                ->createCommand("UPDATE gd_hamkythuat SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
+                ->bindValue(':id', $model->id)
+                ->execute();
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -80,7 +98,29 @@ class GdHamkythuatController extends QuanlyBaseController
         $request = Yii::$app->request;
         $model = $this->findModel($id);
 
-        if ($model->load($request->post()) && $model->save()) {
+        $oldGeomGeojson = $model->geojson;
+
+        if ($model->load($request->post())) {
+
+            if ($model->geojson !== $oldGeomGeojson) {
+                $dataMap = $model->geojson;
+
+                $dataMap = json_decode($dataMap, true);
+                $dataMap = array_values($dataMap);
+                $dataMap = json_encode($dataMap, true);
+                //dd(($dataMap));
+
+                $geom_geojson = '{"type":"MultiPolygon","coordinates":' . $dataMap . '}';
+
+                $model->geojson = $geom_geojson;
+
+                Yii::$app->db->createCommand("UPDATE gd_hamkythuat SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
+                    ->bindValue(':id', $id)
+                    ->execute();
+    
+            }
+            $model->save();
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

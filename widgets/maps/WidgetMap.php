@@ -30,6 +30,8 @@ class WidgetMap extends Widget
     public $options = [];
 
     public $styleOptions = [];
+
+    public $tabId = null;
     /**
      * Initializes the widget.
      * This method will register the bootstrap asset bundle. If you override this method,
@@ -116,10 +118,27 @@ class WidgetMap extends Widget
 
 
 
-        $view->registerJs("function {$name}Init(){\n" . implode("\n", $js) . "}\n;");
+        $view->registerJs("function {$name}Init(){\n" . implode("\n", $js) . "\n};");
 
         $initJS = "{$name}Init();";
+
         $view->registerJs($initJS);
+        $view->registerJs("function invalidateSizeMap()
+    {
+        setTimeout(function () {map.invalidateSize()}, 200)
+    }");
+
+        if($this->tabId != null){
+            $tabId = $this->tabId;
+            $view->registerJs("var tab = document.getElementById('{$tabId}');
+  var observer = new MutationObserver(function(){
+    if(tab.style.display != 'none'){
+      {$name}.invalidateSize();
+    }
+  });
+  observer.observe(tab, {attributes: true}); ");
+        }
+
 
         if($this->draggableMarker != null){
             $this->draggableMarker->map = $name;

@@ -7,10 +7,10 @@
             L.tileLayer.wms('https://maps.hcmgis.vn/geoserver/wms', {"layers": "hcm_map:hcm_map"}).addTo(map);
             L.control.layers({
                 "HCMGIS": L.tileLayer.wms('https://maps.hcmgis.vn/geoserver/wms', {"layers": "hcm_map:hcm_map"}),
-                // "OSM": L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                //     "attribution": "© OpenStreetMap contributors",
-                //     "maxZoom": 22
-                // }),
+                "OSM": L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    "attribution": "© OpenStreetMap contributors",
+                    "maxZoom": 22
+                }),
                 "GMAP": L.tileLayer('http://{s}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
                     "attribution": "© GoogleMap contributors",
                     "maxZoom": 22,

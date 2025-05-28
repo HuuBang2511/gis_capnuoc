@@ -48,10 +48,20 @@ $this->params['breadcrumbs'][] = $this->title;
                     else {
                         $center = new LatLng(['lat' => 10.804207610432567, 'lng' => 106.6952618580442]);
                     }
+
+                    $customIcon = [
+                        'className' => 'custom-marker',
+                        'html' => '<div style="background-color: blue; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>',
+                        'iconSize' => [20, 20],
+                        'iconAnchor' => [10, 10],
+                        'popupAnchor' => [0, -10]
+                    ];
+                    
                     $marker = new DraggableMarker([
                         'center' => $center,
                         'inputX' => '#inputX',
                         'inputY' => '#inputY',
+                        //'icon' => $customIcon
                     ]);
 
                     $basemaps = [];

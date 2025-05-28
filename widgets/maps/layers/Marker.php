@@ -1,13 +1,10 @@
 <?php
-/**
- * @copyright Copyright (c) 2013-2015 2amigOS! Consulting Group LLC
- * @link http://2amigos.us
- * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
- */
+
 namespace app\widgets\maps\layers;
 
 use app\services\DebugService;
-use dosamigos\leaflet\types\Icon;
+use app\widgets\maps\types\LatLng;
+use app\widgets\maps\types\Icon;
 use yii\base\InvalidConfigException;
 use yii\web\JsExpression;
 
@@ -22,7 +19,7 @@ use yii\web\JsExpression;
  */
 /**
  * @property string $name
- * @property \dosamigos\leaflet\types\LatLng $latLng
+ * @property LatLng $latLng
  * @property string $popupContent
  * @property bool $openPopup
  */
@@ -42,7 +39,7 @@ class Marker extends Layer
     }
 
     /**
-     * @return \dosamigos\leaflet\types\Icon
+     * @return Icon
      */
     public function getIcon()
     {

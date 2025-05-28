@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="row">
                         <div class="col-lg-12 pb-2">
 
-                            <div id="map" style="height: 400px"></div>
+                            <div id="map" style="height: 400px; width: 100%;"></div>
                             <script>
 
                                 // center of the map
@@ -39,13 +39,18 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                 // Create the map
                                 var map = L.map('map').setView(center, 14);
+
+                                L.tileLayer('http://{s}.google.com/vt/lyrs=' + 'r' + '&x={x}&y={y}&z={z}', {
+                                    maxZoom: 24,
+                                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+                                }).addTo(map);
                                 var baseMaps = {
                                     "Bản đồ Google": L.tileLayer('http://{s}.google.com/vt/lyrs=' + 'r' + '&x={x}&y={y}&z={z}', {
-                                        maxZoom: 24,
+                                        maxZoom: 22,
                                         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                                    }).addTo(map),
+                                    }),
                                     "Ảnh vệ tinh": L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-                                        maxZoom: 24,
+                                        maxZoom: 22,
                                         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                                     }),
                                     // "MapBox": L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2thZGFtYmkiLCJhIjoiY2lqdndsZGg3MGNua3U1bTVmcnRqM2xvbiJ9.9I5ggqzhUVrErEQ328syYQ#3/0.00/0.00', {
@@ -61,6 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                                 var layerControl = L.control.layers(baseMaps);
                                 layerControl.addTo(map);
+                                
                                 <?php if($model->geojson != null) :?>
                                 var states = [{
                                     "type": "Feature",
@@ -68,14 +74,48 @@ $this->params['breadcrumbs'][] = $this->title;
                                     "geometry": <?= $model->geojson ?>
                                 }];
 
-                                var polygon = L.geoJSON(states).addTo(map);
+                                // var polygon = L.geoJSON(states).addTo(map);
+                                // var bounds = polygon.getBounds();
+                                // if (bounds.isValid()) {
+                                //     console.log('1');
+                                //     map.fitBounds(bounds);
+                                //     //map.invalidateSize();
+                                // } else {
+                                //     map.setZoom(14); // Đặt zoom mặc định nếu bounds không hợp lệ
+                                // }
 
-                                var bounds = polygon.getBounds()
-                                map.fitBounds(bounds)
+                                // var centerpolygon = bounds.getCenter()
+                                // map.panTo(centerpolygon)
 
-                                var centerpolygon = bounds.getCenter()
-                                map.panTo(centerpolygon)
+                                // map.on('zoomend', function() {
+                                //     console.log('Zoom level: ' + map.getZoom());
+                                //     map.invalidateSize();
+                                // });
+
+                                try {
+                                    var polygon = L.geoJSON(states).addTo(map);
+                                    var bounds = polygon.getBounds();
+                                    if (bounds.isValid()) {
+                                        map.fitBounds(bounds, { padding: [50, 50] }); // Thêm padding để tránh zoom quá sát
+                                        map.panTo(bounds.getCenter()); // Di chuyển đến trung tâm của bounds
+
+                                        var centerpolygon = bounds.getCenter()
+                                        map.panTo(centerpolygon)
+                                    } else {
+                                        console.warn('Bounds không hợp lệ, sử dụng zoom mặc định');
+                                        map.setView(center, 14); // Đặt lại vị trí và zoom mặc định
+                                    }
+                                } catch (e) {
+                                    console.error('Lỗi khi xử lý GeoJSON: ', e);
+                                    map.setView(center, 14); // Đặt lại vị trí và zoom mặc định nếu có lỗi
+                                }
                                 <?php endif;?>
+
+                                map.on('zoomend', function() {
+                                    console.log('Zoom level: ' + map.getZoom());
+                                    map.invalidateSize();
+                                });
+
                             </script>
                         </div>
                     </div>
