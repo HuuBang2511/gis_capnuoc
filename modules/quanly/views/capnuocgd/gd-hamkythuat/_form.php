@@ -55,17 +55,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         var map = L.map('map').setView(center, 14);
 
                         L.tileLayer('http://{s}.google.com/vt/lyrs=' + 'r' + '&x={x}&y={y}&z={z}', {
-                            maxZoom: 22,
+                            maxZoom: 24,
                             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                         }).addTo(map);
 
                         var baseMaps = {
                                 "Bản đồ Google": L.tileLayer('http://{s}.google.com/vt/lyrs=' + 'r' + '&x={x}&y={y}&z={z}', {
-                                    maxZoom: 22,
+                                    maxZoom: 24,
                                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                                 }),
                                 "Ảnh vệ tinh": L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-                                    maxZoom: 22,
+                                    maxZoom: 24,
                                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                                 }),
                                 // "MapBox": L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2thZGFtYmkiLCJhIjoiY2lqdndsZGg3MGNua3U1bTVmcnRqM2xvbiJ9.9I5ggqzhUVrErEQ328syYQ#3/0.00/0.00', {
@@ -196,6 +196,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 //Fit the map to the polygon bounds
                                 map.fitBounds(bounds)
 
+                                console.log(bounds);
+
                                 // Or center on the polygon
                                 var centerstates = bounds.getCenter()
                                 map.panTo(centerstates)
@@ -251,59 +253,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         });
 
 
-                        // var wmsDonghoKhLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/giadinh/wms', {
-                        //     layers: 'giadinh:gd_dongho_kh_gd',
-                        //     format: 'image/png',
-                        //     transparent: true,
-                        //     CQL_FILTER: 'status = 1',
-                        //     minZoom: 18,
-                        //     maxZoom: 22 // Đặt maxZoom là 22
-                        // }).addTo(map);
-
-                        // var wmsHamLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/giadinh/wms', {
-                        //     layers: 'giadinh:gd_hamkythuat',
-                        //     format: 'image/png',
-                        //     transparent: true,
-                        //     CQL_FILTER: 'status = 1',
-                        //     maxZoom: 22 // Đặt maxZoom là 22
-                        // }).addTo(map);
-
-                        // var wmsOngCaiDHLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/giadinh/wms', {
-                        //     layers: 'giadinh:gd_ongcai',
-                        //     format: 'image/png',
-                        //     transparent: true,
-                        //     CQL_FILTER: "status = 1", // Thêm điều kiện lọc tinhtrang là 'DH'
-                        //     minZoom: 18,
-                        //     maxZoom: 22 // Đặt maxZoom là 22
-                        // }).addTo(map);
-
-                        // var wmsOngNganhLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/giadinh/wms', {
-                        //     layers: 'giadinh:gd_ongnganh',
-                        //     format: 'image/png',
-                        //     transparent: true,
-                        //     CQL_FILTER: 'status = 1',
-                        //     minZoom: 18, // Đặt maxZoom là 22
-                        //     maxZoom: 22 // Đặt maxZoom là 22
-                        // }).addTo(map);
-
-                        // var wmsTramCuuHoaLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/giadinh/wms', {
-                        //     layers: 'giadinh:gd_tramcuuhoa',
-                        //     format: 'image/png',
-                        //     transparent: true,
-                        //     CQL_FILTER: 'status = 1',
-                        //     minZoom: 20,
-                        //     maxZoom: 22 // Đặt maxZoom là 22
-                        // }).addTo(map);
-
-                        // var wmsVanPhanPhoiLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/giadinh/wms', {
-                        //     layers: 'giadinh:gd_vanphanphoi',
-                        //     format: 'image/png',
-                        //     transparent: true,
-                        //     CQL_FILTER: 'status = 1',
-                        //     minZoom: 20,
-                        //     maxZoom: 22 // Đặt maxZoom là 22
-                        // }).addTo(map);
-
+                        
                     </script>
                 </div>
             </div>
