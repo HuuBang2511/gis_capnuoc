@@ -9,10 +9,10 @@ use \app\modules\APPConfig;
 $url = implode('/', [$module->id, $controller->id]);
 
 $adminSidebar = APPConfig::$CONFIG['adminSidebar'];
-$vientham = APPConfig::$CONFIG['vientham'];
+// $vientham = APPConfig::$CONFIG['vientham'];
 $danhmuc = APPConfig::$CONFIG['danhmuc'];
 $map = APPConfig::$CONFIG['map'];
-$aphu = APPConfig::$CONFIG['aphu'];
+// $aphu = APPConfig::$CONFIG['aphu'];
 $giadinh = APPConfig::$CONFIG['giadinh'];
 $user_id = Yii::$app->user->id;
 //dd(Yii::$app->user->identity->is_admin);
@@ -67,25 +67,6 @@ $user_id = Yii::$app->user->id;
                                         <?php } ?>
                                     <?php endforeach; ?>
                                     <li class="nav-main-heading">Quản lý thông tin</li>
-                                    <li class="nav-main-item" id="vientham">
-                                        <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
-                                           aria-haspopup="true" aria-expanded="true" href="#">
-                                            <i class="nav-main-link-icon fa fa-list"></i>
-                                            <span class="nav-main-link-name">Quản lý SCADA</span>
-                                        </a>
-                                        <ul class="nav-main-submenu">
-                                            <?php foreach ($vientham as $navchild) : ?>
-                                            <?php if (\hcmgis\user\services\AuthService::can($user_id, $navchild['key']) or Yii::$app->user->identity->is_admin == true) { ?>
-                                                <li class="nav-main-item <?= ($url == $navchild['url']) ? 'active' : '' ?>">
-                                                    <a class="nav-main-link"
-                                                       href="<?= Yii::$app->urlManager->createUrl([$navchild['url']]) ?>">
-                                                        <span class="nav-main-link-name"><?= $navchild['name'] ?></span>
-                                                    </a>
-                                                </li>
-                                                <?php } ?>
-                                            <?php endforeach; ?>
-                                        </ul>
-                                    </li>
                                     <li class="nav-main-item" id="giadinh">
                                         <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
                                            aria-haspopup="true" aria-expanded="true" href="#">
@@ -105,7 +86,7 @@ $user_id = Yii::$app->user->id;
                                             <?php endforeach; ?>
                                         </ul>
                                     </li>
-                                    <li class="nav-main-heading">Bản đồ vị trí</li>
+                                    <li class="nav-main-heading">Bản đồ thông minh</li>
 
                                     <li class="nav-main-item">
                                         <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu"
