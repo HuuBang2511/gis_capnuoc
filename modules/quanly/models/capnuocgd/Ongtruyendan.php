@@ -1,7 +1,6 @@
 <?php
 
 namespace app\modules\quanly\models\capnuocgd;
-
 use app\modules\quanly\base\QuanlyBaseModel;
 
 use Yii;
@@ -17,8 +16,10 @@ use Yii;
  * @property string|null $tencongtri
  * @property string|null $donvithiet
  * @property string|null $donvithico
+ * @property string|null $geojson
  */
-class Ongtruyendan extends QuanlyBaseModel{
+class Ongtruyendan extends QuanlyBaseModel
+{
     /**
      * {@inheritdoc}
      */
@@ -33,7 +34,7 @@ class Ongtruyendan extends QuanlyBaseModel{
     public function rules()
     {
         return [
-            [['geom'], 'string'],
+            [['geom', 'geojson'], 'string'],
             [['coong', 'namlapdat'], 'default', 'value' => null],
             [['coong', 'namlapdat'], 'integer'],
             [['vatlieu'], 'string', 'max' => 50],
@@ -56,6 +57,7 @@ class Ongtruyendan extends QuanlyBaseModel{
             'tencongtri' => 'Tencongtri',
             'donvithiet' => 'Donvithiet',
             'donvithico' => 'Donvithico',
+            'geojson' => 'Geojson',
         ];
     }
 }

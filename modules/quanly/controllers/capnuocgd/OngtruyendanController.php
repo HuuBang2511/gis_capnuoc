@@ -67,7 +67,13 @@ class OngtruyendanController extends QuanlyBaseController
         $request = Yii::$app->request;
         $model = new Ongtruyendan();
 
+        $table = '"v2_4326_ONGTRUYENDAN"';
+
         if ($model->load($request->post()) && $model->save()) {
+            Yii::$app->db
+            ->createCommand("UPDATE ".$table." SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -88,7 +94,15 @@ class OngtruyendanController extends QuanlyBaseController
         $request = Yii::$app->request;
         $model = $this->findModel($id);
 
+        $table = '"v2_4326_ONGTRUYENDAN"';
+
+        //dd($table);
+
         if ($model->load($request->post()) && $model->save()) {
+            Yii::$app->db
+            ->createCommand("UPDATE ".$table." SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

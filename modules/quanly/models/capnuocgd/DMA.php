@@ -1,7 +1,6 @@
 <?php
 
 namespace app\modules\quanly\models\capnuocgd;
-
 use app\modules\quanly\base\QuanlyBaseModel;
 use Yii;
 
@@ -16,6 +15,7 @@ use Yii;
  * @property int|null $sometong
  * @property int|null $sovan
  * @property int|null $sotru
+ * @property string|null $geojson
  */
 class DMA extends QuanlyBaseModel
 {
@@ -33,7 +33,7 @@ class DMA extends QuanlyBaseModel
     public function rules()
     {
         return [
-            [['geom'], 'string'],
+            [['geom', 'geojson'], 'string'],
             [['objectid', 'sodaunoi', 'sometong', 'sovan', 'sotru'], 'default', 'value' => null],
             [['objectid', 'sodaunoi', 'sometong', 'sovan', 'sotru'], 'integer'],
             [['madma'], 'string', 'max' => 20],
@@ -49,11 +49,12 @@ class DMA extends QuanlyBaseModel
             'id' => 'ID',
             'geom' => 'Geom',
             'objectid' => 'Objectid',
-            'madma' => 'Mã DMA',
-            'sodaunoi' => 'Số đầu nối',
-            'sometong' => 'Số mét tổng',
-            'sovan' => 'Số van',
-            'sotru' => 'Số trụ',
+            'madma' => 'Madma',
+            'sodaunoi' => 'Sodaunoi',
+            'sometong' => 'Sometong',
+            'sovan' => 'Sovan',
+            'sotru' => 'Sotru',
+            'geojson' => 'Geojson',
         ];
     }
 }
