@@ -60,6 +60,9 @@ class GdOngcaiController extends QuanlyBaseController
         $model = new GdOngcai();
 
         if ($model->load($request->post()) && $model->save()) {
+            Yii::$app->db->createCommand("UPDATE gd_ongcai SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -81,6 +84,9 @@ class GdOngcaiController extends QuanlyBaseController
         $model = $this->findModel($id);
 
         if ($model->load($request->post()) && $model->save()) {
+            Yii::$app->db->createCommand("UPDATE gd_ongcai SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

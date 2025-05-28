@@ -188,6 +188,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     dataMap[layer._leaflet_id] = data;
                                 }
                             });
+                        
+                            console.log('Editable Layers Count:', editableLayers.getLayers().length);
 
                             var bounds = editableLayers.getBounds()
                             console.log(bounds);
@@ -196,7 +198,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 //Fit the map to the polygon bounds
                                 map.fitBounds(bounds)
 
-                                console.log(bounds);
+
 
                                 // Or center on the polygon
                                 var centerstates = bounds.getCenter()

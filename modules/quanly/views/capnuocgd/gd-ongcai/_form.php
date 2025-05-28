@@ -12,8 +12,12 @@ use yii\helpers\ArrayHelper;
 use kartik\form\ActiveForm;
 use app\widgets\maps\LeafletMapAsset;
 use app\widgets\maps\LeafletMap;
+use app\widgets\maps\plugins\leaflet_measure\LeafletMeasureAsset;
+use app\widgets\maps\LeafletDrawAsset;
 
 LeafletMapAsset::register($this);
+LeafletDrawAsset::register($this);
+LeafletMeasureAsset::register($this);
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\quanly\models\capnuocgd\GdOngcai */
@@ -70,18 +74,18 @@ $this->params['breadcrumbs'][] = $this->title;
                                 // }),
                             };
 // Thêm lớp L.Control.Locate
-                        var locateControl = new L.Control.Locate({
-                            position: 'bottomleft',
-                            strings: {
-                                title: "Hiện vị trí",
-                                popup: "Bạn đang ở đây"
-                            },
-                            drawCircle: true,
-                            follow: true,
-                        });
+                        // var locateControl = new L.Control.Locate({
+                        //     position: 'bottomleft',
+                        //     strings: {
+                        //         title: "Hiện vị trí",
+                        //         popup: "Bạn đang ở đây"
+                        //     },
+                        //     drawCircle: true,
+                        //     follow: true,
+                        // });
 
-                        // Thêm lớp locateControl vào bản đồ
-                        map.addControl(locateControl);
+                        // // Thêm lớp locateControl vào bản đồ
+                        // map.addControl(locateControl);
 
                         var layerControl = L.control.layers(baseMaps);
                         layerControl.addTo(map);
@@ -105,6 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     }
                                 },
                                 polyline: true,
+                                line: true,
                                 circle: false, // Turns off this drawing tool
                                 circlemarker: false, // Turns off this drawing tool
                                 rectangle: false,
