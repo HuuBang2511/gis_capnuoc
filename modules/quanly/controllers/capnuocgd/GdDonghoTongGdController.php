@@ -18,7 +18,7 @@ use yii\helpers\Html;
 class GdDonghoTongGdController extends QuanlyBaseController
 {
 
-    public $title = "GdDonghoTongGd";
+    public $title = "Đồng hồ tổng";
 
     /**
      * Lists all GdDonghoTongGd models.
@@ -60,6 +60,12 @@ class GdDonghoTongGdController extends QuanlyBaseController
         $model = new GdDonghoTongGd();
 
         if ($model->load($request->post()) && $model->save()) {
+            Yii::$app->db->createCommand("UPDATE gd_dongho_tong_gd SET geom = ST_GeomFromText('POINT($model->long"." "."$model->lat)', 4326) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
+            Yii::$app->db->createCommand("UPDATE gd_dongho_tong_gd SET geojson = st_asgeojson(ST_GeomFromText('POINT($model->long"." "."$model->lat)', 4326)) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -81,6 +87,12 @@ class GdDonghoTongGdController extends QuanlyBaseController
         $model = $this->findModel($id);
 
         if ($model->load($request->post()) && $model->save()) {
+            Yii::$app->db->createCommand("UPDATE gd_dongho_tong_gd SET geom = ST_GeomFromText('POINT($model->long"." "."$model->lat)', 4326) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
+            Yii::$app->db->createCommand("UPDATE gd_dongho_tong_gd SET geojson = st_asgeojson(ST_GeomFromText('POINT($model->long"." "."$model->lat)', 4326)) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

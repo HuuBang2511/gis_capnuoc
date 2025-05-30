@@ -17,6 +17,7 @@ use Yii;
  * @property string|null $donvithiet
  * @property string|null $donvithico
  * @property string|null $geojson
+ * @property int|null $status
  */
 class Ongtruyendan extends QuanlyBaseModel
 {
@@ -35,8 +36,8 @@ class Ongtruyendan extends QuanlyBaseModel
     {
         return [
             [['geom', 'geojson'], 'string'],
-            [['coong', 'namlapdat'], 'default', 'value' => null],
-            [['coong', 'namlapdat'], 'integer'],
+            [['coong', 'namlapdat', 'status'], 'default', 'value' => null],
+            [['coong', 'namlapdat', 'status'], 'integer'],
             [['vatlieu'], 'string', 'max' => 50],
             [['tencongtri'], 'string', 'max' => 250],
             [['donvithiet', 'donvithico'], 'string', 'max' => 200],
@@ -51,13 +52,14 @@ class Ongtruyendan extends QuanlyBaseModel
         return [
             'id' => 'ID',
             'geom' => 'Geom',
-            'vatlieu' => 'Vatlieu',
-            'coong' => 'Coong',
-            'namlapdat' => 'Namlapdat',
-            'tencongtri' => 'Tencongtri',
-            'donvithiet' => 'Donvithiet',
-            'donvithico' => 'Donvithico',
+            'vatlieu' => 'Vật liệu',
+            'coong' => 'Cỡ ống',
+            'namlapdat' => 'Năm lắp đặt',
+            'tencongtri' => 'Tên công trình',
+            'donvithiet' => 'Đơn vị thiết kế',
+            'donvithico' => 'Đơn vị thi công',
             'geojson' => 'Geojson',
+            'status' => 'Status',
         ];
     }
 }

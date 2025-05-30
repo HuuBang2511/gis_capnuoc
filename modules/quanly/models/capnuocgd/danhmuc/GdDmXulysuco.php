@@ -48,8 +48,8 @@ class GdDmXulysuco extends DanhmucBaseModel
     {
         return [
             'id' => 'ID',
-            'ten' => 'Ten',
-            'ghichu' => 'Ghichu',
+            'ten' => 'Tên',
+            'ghichu' => 'Ghi chú',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

@@ -41,11 +41,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                 var map = L.map('map').setView(center, 14);
                                 var baseMaps = {
                                     "Bản đồ Google": L.tileLayer('http://{s}.google.com/vt/lyrs=' + 'r' + '&x={x}&y={y}&z={z}', {
-                                        maxZoom: 24,
+                                        maxZoom: 22,
                                         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                                     }).addTo(map),
                                     "Ảnh vệ tinh": L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-                                        maxZoom: 24,
+                                        maxZoom: 22,
                                         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                                     }),
                                     // "MapBox": L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2thZGFtYmkiLCJhIjoiY2lqdndsZGg3MGNua3U1bTVmcnRqM2xvbiJ9.9I5ggqzhUVrErEQ328syYQ#3/0.00/0.00', {

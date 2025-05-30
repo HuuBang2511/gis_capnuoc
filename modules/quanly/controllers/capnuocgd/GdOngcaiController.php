@@ -18,7 +18,7 @@ use yii\helpers\Html;
 class GdOngcaiController extends QuanlyBaseController
 {
 
-    public $title = "GdOngcai";
+    public $title = "Ống cái";
 
     /**
      * Lists all GdOngcai models.

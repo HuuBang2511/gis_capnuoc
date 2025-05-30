@@ -18,7 +18,7 @@ use yii\helpers\Html;
 class GdHamkythuatController extends QuanlyBaseController
 {
 
-    public $title = "GdHamkythuat";
+    public $title = "Hầm kỹ thuật";
 
     /**
      * Lists all GdHamkythuat models.
@@ -61,15 +61,15 @@ class GdHamkythuatController extends QuanlyBaseController
 
         if ($model->load($request->post())) {
 
-            $dataMap = $model->geojson;
+            // $dataMap = $model->geojson;
 
-            $dataMap = json_decode($dataMap, true);
-            $dataMap = array_values($dataMap);
-            $dataMap = json_encode($dataMap, true);
+            // $dataMap = json_decode($dataMap, true);
+            // $dataMap = array_values($dataMap);
+            // $dataMap = json_encode($dataMap, true);
 
-            $geom_geojson = '{"type":"MultiPolygon","coordinates":' . $dataMap . '}';
+            // $geom_geojson = '{"type":"MultiPolygon","coordinates":' . $dataMap . '}';
 
-            $model->geojson = $geom_geojson;
+            // $model->geojson = $geom_geojson;
 
             $model->save();
 
@@ -98,27 +98,30 @@ class GdHamkythuatController extends QuanlyBaseController
         $request = Yii::$app->request;
         $model = $this->findModel($id);
 
-        $oldGeomGeojson = $model->geojson;
+        //$oldGeomGeojson = $model->geojson;
 
         if ($model->load($request->post())) {
 
-            if ($model->geojson !== $oldGeomGeojson) {
-                $dataMap = $model->geojson;
+            // if ($model->geojson !== $oldGeomGeojson) {
+            //     $dataMap = $model->geojson;
 
-                $dataMap = json_decode($dataMap, true);
-                $dataMap = array_values($dataMap);
-                $dataMap = json_encode($dataMap, true);
-                //dd(($dataMap));
+            //     $dataMap = json_decode($dataMap, true);
+            //     $dataMap = array_values($dataMap);
+            //     $dataMap = json_encode($dataMap, true);
+            //     //dd(($dataMap));
 
-                $geom_geojson = '{"type":"MultiPolygon","coordinates":' . $dataMap . '}';
+            //     $geom_geojson = '{"type":"MultiPolygon","coordinates":' . $dataMap . '}';
 
-                $model->geojson = $geom_geojson;
+            //     $model->geojson = $geom_geojson;
 
-                Yii::$app->db->createCommand("UPDATE gd_hamkythuat SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
-                    ->bindValue(':id', $id)
-                    ->execute();
+               
     
-            }
+            // }
+
+            Yii::$app->db->createCommand("UPDATE gd_hamkythuat SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
+            ->bindValue(':id', $id)
+            ->execute();
+
             $model->save();
 
             return $this->redirect(['view', 'id' => $model->id]);

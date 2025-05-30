@@ -10,7 +10,7 @@ use app\widgets\export\ExportMenu;
 /* @var $searchModel app\modules\quanly\models\capnuocgd\GdOngcaiSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = (isset($const['title'])) ? $const['title'] : '';
+$this->title = (isset($const['title'])) ? $const['title'] : 'Ống cái';
 $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);

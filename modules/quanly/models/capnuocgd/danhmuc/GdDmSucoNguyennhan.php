@@ -51,9 +51,9 @@ class GdDmSucoNguyennhan extends DanhmucBaseModel
     {
         return [
             'id' => 'ID',
-            'ten' => 'Ten',
-            'ma' => 'Ma',
-            'ghichu' => 'Ghichu',
+            'ten' => 'Tên',
+            'ma' => 'Mã',
+            'ghichu' => 'Ghi chú',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

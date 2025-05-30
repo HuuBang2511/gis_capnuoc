@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 var map = L.map('map').setView(center, 14);
 
                                 L.tileLayer('http://{s}.google.com/vt/lyrs=' + 'r' + '&x={x}&y={y}&z={z}', {
-                                    maxZoom: 24,
+                                    maxZoom: 22,
                                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
                                 }).addTo(map);
                                 var baseMaps = {

@@ -18,7 +18,7 @@ use yii\helpers\Html;
 class GdOngnganhController extends QuanlyBaseController
 {
 
-    public $title = "GdOngnganh";
+    public $title = "Ống ngành";
 
     /**
      * Lists all GdOngnganh models.

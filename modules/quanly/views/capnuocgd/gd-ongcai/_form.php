@@ -63,29 +63,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     maxZoom: 24,
                                     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                                 }),
-                                // "MapBox": L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2thZGFtYmkiLCJhIjoiY2lqdndsZGg3MGNua3U1bTVmcnRqM2xvbiJ9.9I5ggqzhUVrErEQ328syYQ#3/0.00/0.00', {
-                                //     maxZoom: 18,
-                                //     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                                //     id: 'streets-v9',
-                                // }),
-                                // "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                //     attribution: '© <a href="https://www.openstreetmap.org" target="_blank">OpenStreetMap</a>',
-                                //     maxZoom: 18
-                                // }),
                             };
-// Thêm lớp L.Control.Locate
-                        // var locateControl = new L.Control.Locate({
-                        //     position: 'bottomleft',
-                        //     strings: {
-                        //         title: "Hiện vị trí",
-                        //         popup: "Bạn đang ở đây"
-                        //     },
-                        //     drawCircle: true,
-                        //     follow: true,
-                        // });
 
-                        // // Thêm lớp locateControl vào bản đồ
-                        // map.addControl(locateControl);
 
                         var layerControl = L.control.layers(baseMaps);
                         layerControl.addTo(map);

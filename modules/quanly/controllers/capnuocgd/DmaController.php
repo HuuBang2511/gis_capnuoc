@@ -65,9 +65,29 @@ class DmaController extends QuanlyBaseController
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new Ongtruyendan();
+        $model = new DMA();
+        $table = '"v2_4326_DMA"';
 
-        if ($model->load($request->post()) && $model->save()) {
+        if ($model->load($request->post())) {
+
+            // $dataMap = $model->geojson;
+
+            // $dataMap = json_decode($dataMap, true);
+            // $dataMap = array_values($dataMap);
+            // $dataMap = json_encode($dataMap, true);
+
+            // $geom_geojson = '{"type":"MultiPolygon","coordinates":' . $dataMap . '}';
+
+            // $model->geojson = $geom_geojson;
+
+            $model->save();
+
+
+            Yii::$app->db
+            ->createCommand("UPDATE ".$table." SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -87,8 +107,35 @@ class DmaController extends QuanlyBaseController
     {
         $request = Yii::$app->request;
         $model = $this->findModel($id);
+        $table = '"v2_4326_DMA"';
 
-        if ($model->load($request->post()) && $model->save()) {
+        //$oldGeomGeojson = $model->geojson;
+
+        if ($model->load($request->post())) {
+
+            if ($model->geojson !== $oldGeomGeojson) {
+                // $dataMap = $model->geojson;
+
+                // $dataMap = json_decode($dataMap, true);
+                // $dataMap = array_values($dataMap);
+                // $dataMap = json_encode($dataMap, true);
+                // //dd(($dataMap));
+
+                // $geom_geojson = '{"type":"MultiPolygon","coordinates":' . $dataMap . '}';
+
+                // $model->geojson = $geom_geojson;
+
+                
+    
+            }
+
+            Yii::$app->db
+                ->createCommand("UPDATE ".$table." SET geom = ST_SETSRID(ST_GeomFromText(ST_AsText(ST_GeomFromGeoJSON('" . $model->geojson . "'))),4326) WHERE id = :id")
+                ->bindValue(':id', $model->id)
+                ->execute();
+
+            $model->save();
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -110,51 +157,36 @@ class DmaController extends QuanlyBaseController
         $model = $this->findModel($id);
         $model->status = 0;
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
             *   Process for ajax request
             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Xóa DMA #".$id,
-                    'content'=>$this->renderAjax('delete', [
+                    'title' => "Xóa #" . $id,
+                    'content' => $this->renderAjax('delete', [
                         'model' => $model,
                     ]),
-                    'footer'=> Html::button('Đóng',['class'=>'btn btn-light float-right','data-bs-dismiss'=>"modal"]).
-                        Html::button('Xóa',['class'=>'btn btn-danger float-left','type'=>"submit"])
+                    'footer' => Html::button('Đóng', ['class' => 'btn btn-light float-right', 'data-bs-dismiss' => "modal"]) .
+                        Html::button('Xóa', ['class' => 'btn btn-danger float-left', 'type' => "submit"])
                 ];
-            }else if($request->isPost && $model->save()){
+            } else if ($request->isPost && $model->save()) {
                 return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "DMA #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-light float-right','data-bs-dismiss'=>"modal"]).
-                        Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "Xóa thành công #" . $id,
+                    'content' => '<span class="text-success">Xóa thành công</span>',
+                    'footer' => Html::button('Close', ['class' => 'btn btn-light float-right', 'data-bs-dismiss' => "modal"])
                 ];
-            }else{
-                return [
-                    'title'=> "Update DMA #".$id,
-                    'content'=>$this->renderAjax('delete', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-light float-right','data-bs-dismiss'=>"modal"]).
-                        Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];
-            }
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
             } else {
-                return $this->render('delete', [
-                    'model' => $model,
-                    'const' => $this->const,
-                ]);
+                return [
+                    'title' => "Update #" . $id,
+                    'content' => $this->renderAjax('delete', [
+                        'model' => $model,
+                    ]),
+                    'footer' => Html::button('Close', ['class' => 'btn btn-light float-right', 'data-bs-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
             }
         }
     }

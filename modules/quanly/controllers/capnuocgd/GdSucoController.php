@@ -94,6 +94,13 @@ class GdSucoController extends QuanlyBaseController
 
             $model->save();
 
+            Yii::$app->db->createCommand("UPDATE gd_suco SET geom = ST_GeomFromText('POINT($model->long"." "."$model->lat)', 4326) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
+            Yii::$app->db->createCommand("UPDATE gd_suco SET geojson = st_asgeojson(ST_GeomFromText('POINT($model->long"." "."$model->lat)', 4326)) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -140,6 +147,14 @@ class GdSucoController extends QuanlyBaseController
             }
 
             $model->save();
+
+            Yii::$app->db->createCommand("UPDATE gd_suco SET geom = ST_GeomFromText('POINT($model->long"." "."$model->lat)', 4326) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
+            Yii::$app->db->createCommand("UPDATE gd_suco SET geojson = st_asgeojson(ST_GeomFromText('POINT($model->long"." "."$model->lat)', 4326)) WHERE id = :id")
+            ->bindValue(':id', $model->id)
+            ->execute();
+
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
