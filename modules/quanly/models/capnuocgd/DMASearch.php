@@ -18,7 +18,7 @@ class DMASearch extends DMA
     public function rules()
     {
         return [
-            [['id', 'objectid', 'sodaunoi', 'sometong', 'sovan', 'sotru'], 'integer'],
+            [['id', 'objectid', 'sodaunoi', 'sometong', 'sovan', 'sotru', 'status'], 'integer'],
             [['geom', 'madma'], 'safe'],
         ];
     }
@@ -41,7 +41,7 @@ class DMASearch extends DMA
      */
     public function search($params)
     {
-        $query = DMA::find();
+        $query = DMA::find()->where(['status'=>1]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -62,6 +62,7 @@ class DMASearch extends DMA
             'sometong' => $this->sometong,
             'sovan' => $this->sovan,
             'sotru' => $this->sotru,
+            'status' => $this->status,
         ]);
 
         $query->andFilterWhere(['like', 'upper(geom)', mb_strtoupper($this->geom)])
