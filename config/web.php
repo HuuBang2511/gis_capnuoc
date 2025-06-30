@@ -134,7 +134,7 @@ $config = [
     'modules' => [
         'user' => [
             'class' => 'hcmgis\user\Module',
-            'actionModules' => ['quanly', 'danhmuc', 'user'], // Danh sách module cần phân quyền,
+            'actionModules' => ['quanly', 'user'], // Danh sách module cần phân quyền,
             'layout' => '@app/modules/layouts/main'
         ]
     ],
@@ -186,9 +186,7 @@ $config['modules']['contrib'] = [
 //$config['modules']['app'] = [
 //    'class' => 'app\modules\app\Module'
 //];
-$config['modules']['danhmuc'] = [
-    'class' => 'app\modules\danhmuc\Module'
-];
+
 $config['modules']['quanly'] = [
     'class' => 'app\modules\quanly\Module'
 ];
