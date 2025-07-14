@@ -33,6 +33,8 @@ $this->params['hideHero'] = true;
 #mapTong {
     width: 80%;
     transition: width 0.3s;
+    position: relative;
+    z-index: 1000;
 }
 
 #map {
@@ -44,7 +46,6 @@ $this->params['hideHero'] = true;
 .leaflet-pane {
     z-index: 400;
 }
-
 .leaflet-overlay-pane {
     z-index: 650;
 }
@@ -54,7 +55,7 @@ $this->params['hideHero'] = true;
     width: 20%;
     background: #fff;
     border-right: 1px solid #ccc;
-    transition: transform 0.3s;
+    transition: transform 0.3s ease-in-out;
     position: relative;
 }
 
@@ -88,8 +89,7 @@ $this->params['hideHero'] = true;
     display: block;
 }
 
-#layer-content h5,
-#info-content h5 {
+#layer-content h5, #info-content h5 {
     margin-top: 20px;
 }
 
@@ -124,6 +124,7 @@ $this->params['hideHero'] = true;
         transform: translateX(-100%);
         z-index: 1001;
         height: 100vh;
+        background: #fff;
     }
 
     #tabs.active {
@@ -143,22 +144,7 @@ $this->params['hideHero'] = true;
         display: block;
     }
 
-    #tabs {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease-in-out;
-    }
-
-    #tabs.active {
-        transform: translateX(0);
-    }
-
-    #mapTong {
-        width: 100%;
-        transition: width 0.3s ease-in-out;
-    }
-
-    #layer-content,
-    #info-content {
+    #layer-content, #info-content {
         max-height: 70vh;
         overflow-y: scroll;
     }
@@ -179,22 +165,74 @@ div#tabs {
     display: flex;
     flex-direction: column;
 }
+
+.popup-content {
+    font-size: 16px;
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.popup-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.popup-table th {
+    background-color: #f2f2f2;
+    padding: 8px;
+    text-align: left;
+}
+
+.popup-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.popup-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.popup-table th:hover {
+    background-color: #ddd;
+}
+
+@media screen and (max-width: 600px) {
+    .popup-content {
+        width: 100%;
+    }
+
+    .popup-table {
+        overflow-x: auto;
+    }
+}
+
+.legend {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: none;
+}
+
+.legend img {
+    width: 20px;
+    height: auto;
+    margin-right: 5px;
+}
 </style>
 
 <!-- Tải plugin Leaflet-LocateControl -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.css" />
-
 <script src="https://unpkg.com/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.js"></script>
 
 <div id="mapInfo">
     <div id="tabs">
         <div class="">
             <a href="<?= Yii::$app->homeUrl ?>" target="_blank">
-                <img src="http://hpngis.online/resources/images/logo_hpngis.png" alt="Logo"
-                    style="width: 200px; height: auto; float: left; margin-right: 10px;">
+                <img src="http://hpngis.online/resources/images/logo_hpngis.png" alt="Logo" style="width: 200px; height: auto; float: left; margin-right: 10px;">
             </a>
         </div>
-
+        
         <div class="tab-buttons">
             <button class="tab-button active" onclick="openTab('layer')">Lớp dữ liệu</button>
             <button class="tab-button" onclick="openTab('info')">Thông tin chi tiết</button>
@@ -203,27 +241,21 @@ div#tabs {
             <h5>Hiển thị lớp dữ liệu</h5>
             <div id="layer-control">
                 <label><input type="checkbox" onchange="toggleLayer('wmsLoogerLayer')"> Data Logger</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoKhLayer')"> Đồng hồ khách
-                    hàng</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoTongLayer')"> Hầm hồ
-                    tổng</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoKhLayer')"> Đồng hồ khách hàng</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoTongLayer')"> Hầm hồ tổng</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsHamLayer')"> Hầm</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsOngCaiLayer')"> Ống cái</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngCaiDHLayer')"> Ống cái đồng
-                    hồ</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngCaiDHLayer')"> Ống cái đồng hồ</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsOngNganhLayer')"> Ống ngành</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsOngTruyenDanLayer')"> Hầm</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsTrambomLayer')"> Trạm bơm</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsTramCuuHoaLayer')"> Trạm cứu
-                    hỏa</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsVanPhanPhoiLayer')"> Van phân
-                    phối</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsTramCuuHoaLayer')"> Trạm cứu hỏa</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsVanPhanPhoiLayer')"> Van phân phối</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsSucoLayer')"> Sự cố điểm bể</label><br>
                 <label><input type="checkbox" onchange="toggleLayer('wmsDMA')"> DMA</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('highlightLayer')"> Highlight</label><br>
                 <button id="back-to-map-btn" onclick="toggleTabVisibility()">Quay lại map</button>
             </div>
-
         </div>
         <div id="info-content" class="tab-content">
             <h5>Thông tin chi tiết</h5>
@@ -231,7 +263,6 @@ div#tabs {
                 <div id="feature-details">Chọn một đối tượng trên bản đồ để xem thông tin</div>
                 <button id="back-to-map-btn" onclick="toggleTabVisibility()">Quay lại map</button>
             </div>
-
         </div>
     </div>
 
@@ -731,17 +762,13 @@ map.on('click', function(e) {
                             openTab('info');
                             // Chỉ toggle tab nếu nó đang ẩn
                             const tabs = document.getElementById('tabs');
-                            if (tabs.classList.contains('active')) {
-                                // Nếu tab đã hiển thị, không cần toggle lại
-                            } else {
-                                toggleTabVisibility(); // Mở tab nếu đang ẩn
-                                tabShown = true; // Đánh dấu tab đã được hiển thị
+                            if (!tabs.classList.contains('active')) {
+                                toggleTabVisibility();
+                                tabShown = true;
                             }
                         }
                     } else if (isMobile && tabShown) {
-                        // Nếu không có dữ liệu và tab đã được mở, giữ nguyên
-                    } else if (isMobile) {
-                        // Nếu không có dữ liệu và tab chưa mở, không làm gì cả
+                        // Giữ tab hiển thị nếu đã mở
                     }
                 })
         }
@@ -777,18 +804,46 @@ function toggleTabVisibility() {
 }
 
 // Add toggle button for tabs
-var toggleTabBtn = L.control({
-    position: 'topleft'
-});
+var toggleTabBtn = L.control({ position: 'topleft' });
 toggleTabBtn.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'leaflet-bar');
-    div.innerHTML =
-        '<button id="toggle-tab-btn" style="background: #fff; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer;">☰</button>';
+    div.innerHTML = '<button id="toggle-tab-btn" style="background: #fff; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer;">☰</button>';
     return div;
 };
 toggleTabBtn.addTo(map);
 
 document.getElementById('toggle-tab-btn').addEventListener('click', toggleTabVisibility);
+
+// Thêm sự kiện swipe cho thiết bị di động
+let touchstartX = 0;
+let touchendX = 0;
+
+function handleSwipe() {
+    const tabs = document.getElementById('tabs');
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        const diffX = touchendX - touchstartX;
+        if (diffX > 50) { // Swipe từ trái sang phải
+            if (!tabs.classList.contains('active')) {
+                toggleTabVisibility();
+            }
+        } else if (diffX < -50) { // Swipe từ phải sang trái
+            if (tabs.classList.contains('active')) {
+                toggleTabVisibility();
+            }
+        }
+    }
+}
+
+document.addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
 
 // Tạo legend control
 var legendControl = L.control({
@@ -844,59 +899,3 @@ document.getElementById('legend-toggle-btn').addEventListener('click', function(
 
 var layerControl = L.control.layers(baseMaps).addTo(map);
 </script>
-
-<style>
-.popup-content {
-    font-size: 16px;
-    max-width: 100%;
-    overflow-x: auto;
-}
-
-.popup-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.popup-table th {
-    background-color: #f2f2f2;
-    padding: 8px;
-    text-align: left;
-}
-
-.popup-table td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-}
-
-.popup-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-.popup-table th:hover {
-    background-color: #ddd;
-}
-
-@media screen and (max-width: 600px) {
-    .popup-content {
-        width: 100%;
-    }
-
-    .popup-table {
-        overflow-x: auto;
-    }
-}
-
-.legend {
-    background-color: white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    display: none;
-}
-
-.legend img {
-    width: 20px;
-    height: auto;
-    margin-right: 5px;
-}
-</style>
