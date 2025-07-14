@@ -211,6 +211,13 @@ class APPConfig
                 'url' => 'quanly/map/giadinh',
                 'key'=>'quanly.map.giadinh',
                 'hasChild' => false,
+            ],
+            [
+                'name' => 'Map cà mau',
+                'icon' => 'fa fa-list',
+                'url' => 'quanly/map-camau/index',
+                'key'=>'quanly.map-camau.index',
+                'hasChild' => false,
             ]
         ],
         'danhmuc' => [
