@@ -44,6 +44,7 @@ $this->params['hideHero'] = true;
 .leaflet-pane {
     z-index: 400;
 }
+
 .leaflet-overlay-pane {
     z-index: 650;
 }
@@ -87,7 +88,8 @@ $this->params['hideHero'] = true;
     display: block;
 }
 
-#layer-content h5, #info-content h5 {
+#layer-content h5,
+#info-content h5 {
     margin-top: 20px;
 }
 
@@ -141,7 +143,22 @@ $this->params['hideHero'] = true;
         display: block;
     }
 
-    #layer-content, #info-content {
+    #tabs {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #tabs.active {
+        transform: translateX(0);
+    }
+
+    #mapTong {
+        width: 100%;
+        transition: width 0.3s ease-in-out;
+    }
+
+    #layer-content,
+    #info-content {
         max-height: 70vh;
         overflow-y: scroll;
     }
@@ -162,8 +179,6 @@ div#tabs {
     display: flex;
     flex-direction: column;
 }
-
-
 </style>
 
 <!-- Tải plugin Leaflet-LocateControl -->
@@ -175,10 +190,11 @@ div#tabs {
     <div id="tabs">
         <div class="">
             <a href="<?= Yii::$app->homeUrl ?>" target="_blank">
-                <img src="http://hpngis.online/resources/images/logo_hpngis.png" alt="Logo" style="width: 200px; height: auto; float: left; margin-right: 10px;">
+                <img src="http://hpngis.online/resources/images/logo_hpngis.png" alt="Logo"
+                    style="width: 200px; height: auto; float: left; margin-right: 10px;">
             </a>
         </div>
-        
+
         <div class="tab-buttons">
             <button class="tab-button active" onclick="openTab('layer')">Lớp dữ liệu</button>
             <button class="tab-button" onclick="openTab('info')">Thông tin chi tiết</button>
@@ -187,22 +203,27 @@ div#tabs {
             <h5>Hiển thị lớp dữ liệu</h5>
             <div id="layer-control">
                 <label><input type="checkbox" onchange="toggleLayer('wmsLoogerLayer')"> Data Logger</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoKhLayer')"> Đồng hồ khách hàng</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoTongLayer')"> Hầm hồ tổng</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoKhLayer')"> Đồng hồ khách
+                    hàng</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoTongLayer')"> Hầm hồ
+                    tổng</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsHamLayer')"> Hầm</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsOngCaiLayer')"> Ống cái</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngCaiDHLayer')"> Ống cái đồng hồ</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngCaiDHLayer')"> Ống cái đồng
+                    hồ</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsOngNganhLayer')"> Ống ngành</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsOngTruyenDanLayer')"> Hầm</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsTrambomLayer')"> Trạm bơm</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsTramCuuHoaLayer')"> Trạm cứu hỏa</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsVanPhanPhoiLayer')"> Van phân phối</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsTramCuuHoaLayer')"> Trạm cứu
+                    hỏa</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsVanPhanPhoiLayer')"> Van phân
+                    phối</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('wmsSucoLayer')"> Sự cố điểm bể</label><br>
                 <label><input type="checkbox" onchange="toggleLayer('wmsDMA')"> DMA</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('highlightLayer')"> Highlight</label><br>
                 <button id="back-to-map-btn" onclick="toggleTabVisibility()">Quay lại map</button>
             </div>
-           
+
         </div>
         <div id="info-content" class="tab-content">
             <h5>Thông tin chi tiết</h5>
@@ -210,7 +231,7 @@ div#tabs {
                 <div id="feature-details">Chọn một đối tượng trên bản đồ để xem thông tin</div>
                 <button id="back-to-map-btn" onclick="toggleTabVisibility()">Quay lại map</button>
             </div>
-            
+
         </div>
     </div>
 
@@ -453,6 +474,8 @@ function getFeatureInfoUrl(layer, latlng, url) {
 
 map.on('click', function(e) {
     const layers = map._layers;
+    const isMobile = window.innerWidth <= 768;
+    let tabShown = false;
 
     for (const idx in layers) {
         const layer = layers[idx];
@@ -704,12 +727,21 @@ map.on('click', function(e) {
                             }
                         }
                         document.getElementById('feature-details').innerHTML = popupContent;
-                        if (window.innerWidth <= 768) {
+                        if (isMobile) {
                             openTab('info');
-                            toggleTabVisibility();
-                        }else{
-                            openTab('info');
+                            // Chỉ toggle tab nếu nó đang ẩn
+                            const tabs = document.getElementById('tabs');
+                            if (tabs.classList.contains('active')) {
+                                // Nếu tab đã hiển thị, không cần toggle lại
+                            } else {
+                                toggleTabVisibility(); // Mở tab nếu đang ẩn
+                                tabShown = true; // Đánh dấu tab đã được hiển thị
+                            }
                         }
+                    } else if (isMobile && tabShown) {
+                        // Nếu không có dữ liệu và tab đã được mở, giữ nguyên
+                    } else if (isMobile) {
+                        // Nếu không có dữ liệu và tab chưa mở, không làm gì cả
                     }
                 })
         }
@@ -745,10 +777,13 @@ function toggleTabVisibility() {
 }
 
 // Add toggle button for tabs
-var toggleTabBtn = L.control({ position: 'topleft' });
+var toggleTabBtn = L.control({
+    position: 'topleft'
+});
 toggleTabBtn.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'leaflet-bar');
-    div.innerHTML = '<button id="toggle-tab-btn" style="background: #fff; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer;">☰</button>';
+    div.innerHTML =
+        '<button id="toggle-tab-btn" style="background: #fff; border: 1px solid #ccc; padding: 5px 10px; cursor: pointer;">☰</button>';
     return div;
 };
 toggleTabBtn.addTo(map);
