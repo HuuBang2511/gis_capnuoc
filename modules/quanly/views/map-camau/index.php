@@ -838,35 +838,35 @@ toggleTabBtn.addTo(map);
 document.getElementById('toggle-tab-btn').addEventListener('click', toggleTabVisibility);
 
 // Thêm sự kiện swipe cho thiết bị di động
-let touchstartX = 0;
-let touchendX = 0;
+// let touchstartX = 0;
+// let touchendX = 0;
 
-function handleSwipe() {
-    const tabs = document.getElementById('tabs');
-    const isMobile = window.innerWidth <= 768;
+// function handleSwipe() {
+//     const tabs = document.getElementById('tabs');
+//     const isMobile = window.innerWidth <= 768;
 
-    if (isMobile) {
-        const diffX = touchendX - touchstartX;
-        if (diffX > 20) { // Swipe từ trái sang phải
-            if (!tabs.classList.contains('active')) {
-                toggleTabVisibility();
-            }
-        } else if (diffX < -20) { // Swipe từ phải sang trái
-            if (tabs.classList.contains('active')) {
-                toggleTabVisibility();
-            }
-        }
-    }
-}
+//     if (isMobile) {
+//         const diffX = touchendX - touchstartX;
+//         if (diffX > 20) { // Swipe từ trái sang phải
+//             if (!tabs.classList.contains('active')) {
+//                 toggleTabVisibility();
+//             }
+//         } else if (diffX < -20) { // Swipe từ phải sang trái
+//             if (tabs.classList.contains('active')) {
+//                 toggleTabVisibility();
+//             }
+//         }
+//     }
+// }
 
-document.addEventListener('touchstart', e => {
-    touchstartX = e.changedTouches[0].screenX;
-});
+// document.addEventListener('touchstart', e => {
+//     touchstartX = e.changedTouches[0].screenX;
+// });
 
-document.addEventListener('touchend', e => {
-    touchendX = e.changedTouches[0].screenX;
-    handleSwipe();
-});
+// document.addEventListener('touchend', e => {
+//     touchendX = e.changedTouches[0].screenX;
+//     handleSwipe();
+// });
 
 // Tạo legend control
 var legendControl = L.control({
