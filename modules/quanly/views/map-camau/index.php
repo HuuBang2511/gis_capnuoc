@@ -847,11 +847,11 @@ function handleSwipe() {
 
     if (isMobile) {
         const diffX = touchendX - touchstartX;
-        if (diffX > 50) { // Swipe từ trái sang phải
+        if (diffX > 20) { // Swipe từ trái sang phải
             if (!tabs.classList.contains('active')) {
                 toggleTabVisibility();
             }
-        } else if (diffX < -50) { // Swipe từ phải sang trái
+        } else if (diffX < -20) { // Swipe từ phải sang trái
             if (tabs.classList.contains('active')) {
                 toggleTabVisibility();
             }
