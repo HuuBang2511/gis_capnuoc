@@ -57,6 +57,16 @@ $this->params['hideHero'] = true;
     border-right: 1px solid #ccc;
     transition: transform 0.3s ease-in-out;
     position: relative;
+    transform: translateX(0);
+}
+
+#tabs.toggling {
+    pointer-events: none;
+    transition: transform 0.3s ease-in-out;
+}
+
+#tabs.active {
+    transform: translateX(0); /* Fully visible */
 }
 
 .tab-buttons {
@@ -130,19 +140,23 @@ $this->params['hideHero'] = true;
         position: absolute;
         top: 0;
         left: 0;
-        transform: translateX(-100%);
+        transform: translateX(-100%); /* Hidden by default on mobile */
         z-index: 1001;
         height: 100vh;
         background: #fff;
     }
 
     #tabs.active {
-        transform: translateX(0);
+        transform: translateX(0); /* Visible when active */
     }
 
     #mapTong {
         width: 100%;
-        height: 100vh;
+        transition: width 0.3s;
+    }
+
+    #mapTong.toggling {
+        transition: width 0.3s;
     }
 
     .tab-button {
@@ -239,8 +253,6 @@ div#tabs {
     height: auto;
     margin-right: 5px;
 }
-
-
 </style>
 
 <!-- Tải plugin Leaflet-LocateControl -->
@@ -817,6 +829,10 @@ function toggleTabVisibility() {
     var mapTong = document.getElementById('mapTong');
     var isActive = tabs.classList.contains('active');
 
+    // Prevent multiple toggles if already in progress
+    if (tabs.classList.contains('toggling')) return;
+
+    tabs.classList.add('toggling');
     if (isActive) {
         tabs.classList.remove('active');
         mapTong.style.width = '100%';
@@ -824,6 +840,11 @@ function toggleTabVisibility() {
         tabs.classList.add('active');
         mapTong.style.width = '80%';
     }
+
+    // Ensure the transition completes before removing the toggling class
+    setTimeout(() => {
+        tabs.classList.remove('toggling');
+    }, 300); // Match the CSS transition duration
 }
 
 // Add toggle button for tabs
@@ -836,37 +857,6 @@ toggleTabBtn.onAdd = function(map) {
 toggleTabBtn.addTo(map);
 
 document.getElementById('toggle-tab-btn').addEventListener('click', toggleTabVisibility);
-
-// Thêm sự kiện swipe cho thiết bị di động
-// let touchstartX = 0;
-// let touchendX = 0;
-
-// function handleSwipe() {
-//     const tabs = document.getElementById('tabs');
-//     const isMobile = window.innerWidth <= 768;
-
-//     if (isMobile) {
-//         const diffX = touchendX - touchstartX;
-//         if (diffX > 20) { // Swipe từ trái sang phải
-//             if (!tabs.classList.contains('active')) {
-//                 toggleTabVisibility();
-//             }
-//         } else if (diffX < -20) { // Swipe từ phải sang trái
-//             if (tabs.classList.contains('active')) {
-//                 toggleTabVisibility();
-//             }
-//         }
-//     }
-// }
-
-// document.addEventListener('touchstart', e => {
-//     touchstartX = e.changedTouches[0].screenX;
-// });
-
-// document.addEventListener('touchend', e => {
-//     touchendX = e.changedTouches[0].screenX;
-//     handleSwipe();
-// });
 
 // Tạo legend control
 var legendControl = L.control({
