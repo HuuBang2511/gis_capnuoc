@@ -111,6 +111,15 @@ $this->params['hideHero'] = true;
     cursor: pointer;
 }
 
+.tabs-header{
+    display:flex;
+    justify-content: space-between;
+}
+
+#back-to-map-mobile-btn{
+    display:none;
+}
+
 @media screen and (max-width: 768px) {
     #mapInfo {
         flex-direction: column;
@@ -147,6 +156,17 @@ $this->params['hideHero'] = true;
     #layer-content, #info-content {
         max-height: 70vh;
         overflow-y: scroll;
+    }
+
+    #back-to-map-mobile-btn{
+        display:block;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        height: 30px;
     }
 }
 
@@ -219,6 +239,8 @@ div#tabs {
     height: auto;
     margin-right: 5px;
 }
+
+
 </style>
 
 <!-- Tải plugin Leaflet-LocateControl -->
@@ -227,10 +249,11 @@ div#tabs {
 
 <div id="mapInfo">
     <div id="tabs">
-        <div class="">
+        <div class="tabs-header">
             <a href="<?= Yii::$app->homeUrl ?>" target="_blank">
                 <img src="http://hpngis.online/resources/images/logo_hpngis.png" alt="Logo" style="width: 200px; height: auto; float: left; margin-right: 10px;">
             </a>
+            <button id="back-to-map-mobile-btn" onclick="toggleTabVisibility()">X</button>
         </div>
         
         <div class="tab-buttons">
