@@ -793,6 +793,9 @@ map.on('click', function(e) {
                             }
                         }
                         document.getElementById('feature-details').innerHTML = popupContent;
+                        highlightLayer.clearLayers(); // Xóa highlight trước đó (nếu có)
+                        var highlightedFeature = L.geoJSON(geojsonData.features[0]);
+                        highlightLayer.addLayer(highlightedFeature);
                         if (isMobile) {
                             openTab('info');
                             // Chỉ toggle tab nếu nó đang ẩn
