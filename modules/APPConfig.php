@@ -213,10 +213,17 @@ class APPConfig
                 'hasChild' => false,
             ],
             [
-                'name' => 'Map cà mau',
+                'name' => 'Map test',
                 'icon' => 'fa fa-list',
                 'url' => 'quanly/map-camau/index',
                 'key'=>'quanly.map-camau.index',
+                'hasChild' => false,
+            ],
+            [
+                'name' => 'Map IOT',
+                'icon' => 'fa fa-list',
+                'url' => 'quanly/map/map_iot',
+                'key'=>'quanly.map.map_iot.index',
                 'hasChild' => false,
             ]
         ],

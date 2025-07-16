@@ -23,4 +23,9 @@ class MapController extends QuanlyBaseController
     {
         return $this->render('maptest');
     }
+
+    public function actionMap_iot()
+    {
+        return $this->render('map_iot');
+    }
 }
