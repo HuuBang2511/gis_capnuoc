@@ -13,7 +13,8 @@ LeafletLocateAsset::register($this);
 
 // Các biến URL để dễ dàng quản lý và thay đổi
 $wmsUrl = 'http://103.9.77.141:8080/geoserver/giscapnuoc/wms';
-$legendWmsUrl = 'http://103.9.77.141:8080/geoserver/giadinh/wms';
+// SỬA ĐỔI: Đồng nhất URL cho chú thích
+$legendWmsUrl = 'http://103.9.77.141:8080/geoserver/giscapnuoc/wms';
 $apiBaseUrl = 'https://gisapi.giadinhwater.vn/gdw';
 $detailViewUrl = 'http://hpngis.online/quanly/capnuocgd';
 
@@ -62,24 +63,26 @@ $detailViewUrl = 'http://hpngis.online/quanly/capnuocgd';
                                     layers: 'giscapnuoc:basemap_capnuoc',
                                     format: 'image/png',
                                     transparent: true,
+                                    minZoom: 0,
+                                    maxZoom: 22,
                                     attribution: 'Base Map'
                                 }),
                             };
 
                             const wmsLayersConfig = {
-                                "Data logger": { layer: 'giscapnuoc:gd_data_logger', visible: false, minZoom: 0 },
-                                "Đồng hồ khách hàng": { layer: 'giscapnuoc:gd_dongho_kh_gd', visible: true, minZoom: 18 },
-                                "Đồng hồ tổng": { layer: 'giscapnuoc:gd_dongho_tong_gd', visible: true, minZoom: 0 },
-                                "Hầm kỹ thuật": { layer: 'giscapnuoc:gd_hamkythuat', visible: true, minZoom: 0 },
+                                "Data logger": { layer: 'giscapnuoc:gd_data_logger', visible: false },
+                                "Đồng hồ khách hàng": { layer: 'giscapnuoc:gd_dongho_kh_gd', visible: true },
+                                "Đồng hồ tổng": { layer: 'giscapnuoc:gd_dongho_tong_gd', visible: true },
+                                "Hầm kỹ thuật": { layer: 'giscapnuoc:gd_hamkythuat', visible: true },
                                 "Ống cái Đang sử dụng": { layer: 'giscapnuoc:gd_ongcai', visible: true, cql_filter: "status = 1 AND tinhtrang <> 'DH'" },
-                                "Ống cái Đã Hủy": { layer: 'giscapnuoc:gd_ongcai', visible: false, minZoom: 18, cql_filter: "status = 1 AND tinhtrang = 'DH'" },
-                                "Ống ngánh": { layer: 'giscapnuoc:gd_ongnganh', visible: true, minZoom: 18 },
-                                "Ống truyền dẫn": { layer: 'giscapnuoc:v2_4326_ONGTRUYENDAN', visible: true, minZoom: 20 },
-                                "Trạm bơm": { layer: 'giscapnuoc:gd_trambom', visible: false, minZoom: 0 },
-                                "Trụ cứu hỏa": { layer: 'giscapnuoc:gd_tramcuuhoa', visible: true, minZoom: 20 },
-                                "Van phân phối": { layer: 'giscapnuoc:gd_vanphanphoi', visible: true, minZoom: 20 },
-                                "Sự cố điểm bể": { layer: 'giscapnuoc:v2_gd_suco', visible: false, minZoom: 20 },
-                                "DMA": { layer: 'giscapnuoc:v2_4326_DMA', visible: false, minZoom: 0 },
+                                "Ống cái Đã Hủy": { layer: 'giscapnuoc:gd_ongcai', visible: false, cql_filter: "status = 1 AND tinhtrang = 'DH'" },
+                                "Ống ngánh": { layer: 'giscapnuoc:gd_ongnganh', visible: true },
+                                "Ống truyền dẫn": { layer: 'giscapnuoc:v2_4326_ONGTRUYENDAN', visible: true },
+                                "Trạm bơm": { layer: 'giscapnuoc:gd_trambom', visible: false },
+                                "Trụ cứu hỏa": { layer: 'giscapnuoc:gd_tramcuuhoa', visible: true },
+                                "Van phân phối": { layer: 'giscapnuoc:gd_vanphanphoi', visible: true },
+                                "Sự cố điểm bể": { layer: 'giscapnuoc:v2_gd_suco', visible: false },
+                                "DMA": { layer: 'giscapnuoc:v2_4326_DMA', visible: false },
                             };
 
                             const overlayLayers = { "Đối tượng được chọn": highlightLayer };
@@ -124,16 +127,17 @@ $detailViewUrl = 'http://hpngis.online/quanly/capnuocgd';
                             }).addTo(map);
 
                             // --- TẠO CHÚ THÍCH (LEGEND) ---
+                            // SỬA ĐỔI: Đồng nhất workspace của các lớp trong chú thích
                             const legendConfig = [
-                                { name: 'Đồng hồ KH', layer: 'giadinh:gd_dongho_kh_gd' },
-                                { name: 'Đồng hồ tổng', layer: 'giadinh:gd_dongho_tong_gd' },
-                                { name: 'Trạm bơm', layer: 'giadinh:gd_trambom' },
-                                { name: 'Trạm cứu hỏa', layer: 'giadinh:gd_tramcuuhoa' },
-                                { name: 'Van phân phối', layer: 'giadinh:gd_vanphanphoi' },
-                                { name: 'Hầm kỹ thuật', layer: 'giadinh:gd_hamkythuat' },
-                                { name: 'Ống cái', layer: 'giadinh:gd_ongcai' },
-                                { name: 'Ống ngánh', layer: 'giadinh:gd_ongnganh' },
-                                { name: 'Sự cố', layer: 'giadinh:gd_suco' },
+                                { name: 'Đồng hồ KH', layer: 'giscapnuoc:gd_dongho_kh_gd' },
+                                { name: 'Đồng hồ tổng', layer: 'giscapnuoc:gd_dongho_tong_gd' },
+                                { name: 'Trạm bơm', layer: 'giscapnuoc:gd_trambom' },
+                                { name: 'Trạm cứu hỏa', layer: 'giscapnuoc:gd_tramcuuhoa' },
+                                { name: 'Van phân phối', layer: 'giscapnuoc:gd_vanphanphoi' },
+                                { name: 'Hầm kỹ thuật', layer: 'giscapnuoc:gd_hamkythuat' },
+                                { name: 'Ống cái', layer: 'giscapnuoc:gd_ongcai' },
+                                { name: 'Ống ngánh', layer: 'giscapnuoc:gd_ongnganh' },
+                                { name: 'Sự cố', layer: 'giscapnuoc:v2_gd_suco' },
                             ];
                             
                             const legend = L.control({ position: 'bottomright' });

@@ -149,7 +149,7 @@ LeafletMapAsset::register($this);
                         }
 
                         // Create WMS layers
-                        var wmsDonghoLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/aphu/wms', {
+                        var wmsDonghoLayer = L.tileLayer.wms('https://nongdanviet.net/geoserver/aphu/wms', {
                             layers: 'aphu:dongho_kh',
                             format: 'image/png',
                             transparent: true,
@@ -157,7 +157,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsHoThuyLoiLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/aphu/wms', {
+                        var wmsHoThuyLoiLayer = L.tileLayer.wms('https://nongdanviet.net/geoserver/aphu/wms', {
                             layers: 'aphu:ho_thuyloi',
                             format: 'image/png',
                             transparent: true,
@@ -165,7 +165,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsNhaMayNuocLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/aphu/wms', {
+                        var wmsNhaMayNuocLayer = L.tileLayer.wms('https://nongdanviet.net/geoserver/aphu/wms', {
                             layers: 'aphu:nhamay_nuoc',
                             format: 'image/png',
                             transparent: true,
@@ -173,7 +173,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsOngDichVuLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/aphu/wms', {
+                        var wmsOngDichVuLayer = L.tileLayer.wms('https://nongdanviet.net/geoserver/aphu/wms', {
                             layers: 'aphu:ong_dichvu',
                             format: 'image/png',
                             transparent: true,
@@ -181,7 +181,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsOngNuocThoLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/aphu/wms', {
+                        var wmsOngNuocThoLayer = L.tileLayer.wms('https://nongdanviet.net/geoserver/aphu/wms', {
                             layers: 'aphu:ong_nuoctho',
                             format: 'image/png',
                             transparent: true,
@@ -189,7 +189,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsOngPhanPhoiLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/aphu/wms', {
+                        var wmsOngPhanPhoiLayer = L.tileLayer.wms('https://nongdanviet.net/geoserver/aphu/wms', {
                             layers: 'aphu:ong_phanphoi',
                             format: 'image/png',
                             transparent: true,
@@ -197,7 +197,7 @@ LeafletMapAsset::register($this);
                             maxZoom: 22 // Đặt maxZoom là 22
                         }).addTo(map);
 
-                        var wmsVanMangLuoiLayer = L.tileLayer.wms('http://103.9.77.108:8080/geoserver/aphu/wms', {
+                        var wmsVanMangLuoiLayer = L.tileLayer.wms('https://nongdanviet.net/geoserver/aphu/wms', {
                             layers: 'aphu:van_mangluoi',
                             format: 'image/png',
                             transparent: true,
