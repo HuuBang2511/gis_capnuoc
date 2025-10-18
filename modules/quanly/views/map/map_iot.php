@@ -113,9 +113,14 @@
         .popup-body-row strong {
             color: #9ca3af; /* gray-400 */
             margin-right: 8px;
+            flex-shrink: 0;
         }
         .popup-body-row span {
             word-break: break-all;
+            text-align: right;
+        }
+        .popup-body-details {
+             font-size: 12px;
         }
 
         /* Vùng chứa biểu đồ trong Popup */
@@ -183,8 +188,6 @@
                     initialView: [10.7769, 106.7009],
                     initialZoom: 12,
                 },
-                // LƯU Ý BẢO MẬT: Thông tin đăng nhập không nên được mã hóa cứng trong code phía client.
-                // Đây chỉ là mục đích demo. Trong ứng dụng thực tế, hãy sử dụng quy trình xác thực an toàn.
                 credentials: {
                     emailOrUsername: "demo2",
                     password: "Demo@@22"
@@ -218,7 +221,6 @@
                 this.map.init();
 
                 try {
-                    // 1. Đăng nhập để lấy token và roleId
                     const loginData = await this.api.login();
                     this.state.accessToken = loginData.accessToken;
                     const roleId = loginData.userData?.roleId;
@@ -227,13 +229,11 @@
                         throw new Error("Không thể lấy Role ID từ phản hồi đăng nhập.");
                     }
 
-                    // 2. Lấy danh sách thiết bị
                     const devices = await this.api.getDevices(roleId);
                     if (!devices || devices.length === 0) {
                         this.utils.showError("Không tìm thấy thiết bị nào.", false);
                     }
 
-                    // 3. Thêm thiết bị lên bản đồ
                     this.map.addDevicesToMap(devices);
 
                 } catch (error) {
@@ -246,10 +246,6 @@
             
             // Các hàm tương tác với API
             api: {
-                /**
-                 * Đăng nhập vào hệ thống
-                 * @returns {Promise<object>} Dữ liệu đăng nhập, bao gồm accessToken và userData
-                 */
                 async login() {
                     const response = await fetch(`${App.config.apiBaseUrl}/auth/login`, {
                         method: "POST",
@@ -257,15 +253,9 @@
                         body: JSON.stringify(App.config.credentials)
                     });
                     if (!response.ok) throw new Error(`Đăng nhập thất bại: ${response.statusText}`);
-                    const data = await response.json();
-                    return data;
+                    return await response.json();
                 },
 
-                /**
-                 * Lấy danh sách thiết bị theo Role ID
-                 * @param {string} roleId
-                 * @returns {Promise<Array>} Danh sách thiết bị
-                 */
                 async getDevices(roleId) {
                     const response = await fetch(`${App.config.apiBaseUrl}/role/device?roleId=${roleId}`, {
                         headers: { Authorization: `Bearer ${App.state.accessToken}` }
@@ -275,18 +265,13 @@
                     return data.data || [];
                 },
                 
-                /**
-                 * Lấy dữ liệu lịch sử của một thiết bị
-                 * @param {object} device
-                 * @returns {Promise<Array>} Dữ liệu đã được sắp xếp
-                 */
                 async getDeviceData(device) {
                     const endpoint = device.dataType === 'PRV' ? 'vga-data' : 'carbonate-hardness-data';
                     const url = `${App.config.apiBaseUrl}/${endpoint}?deviceId=${device.deviceId}&sort=DESC&perPage=13&page=1`;
                     const response = await fetch(url, { headers: { Authorization: `Bearer ${App.state.accessToken}` } });
                     if (!response.ok) throw new Error(`Không thể lấy dữ liệu biểu đồ: ${response.statusText}`);
                     const result = await response.json();
-                    return (result.data || []).reverse(); // Đảo ngược để hiển thị từ cũ đến mới
+                    return (result.data || []).reverse();
                 }
             },
 
@@ -313,7 +298,6 @@
                             return;
                         }
                         
-                        // Xác định loại dữ liệu dựa trên tên thiết bị
                         const isPrv = device.device?.name?.toLowerCase().includes('prv');
                         device.dataType = isPrv ? 'PRV' : 'QTCLN';
 
@@ -330,7 +314,6 @@
                         App.state.deviceLayerGroup.addLayer(marker);
                     });
 
-                    // Tự động zoom để thấy tất cả thiết bị
                     if (App.state.deviceLayerGroup.getLayers().length > 0) {
                         App.state.map.fitBounds(App.state.deviceLayerGroup.getBounds().pad(0.2));
                     }
@@ -345,6 +328,9 @@
                         <div class="popup-body">
                             <div class="popup-body-row"><strong>ID:</strong><span>${device.deviceId}</span></div>
                             <div class="popup-body-row"><strong>Loại:</strong><span>${device.dataType}</span></div>
+                            <div class="popup-body-details mt-2 border-t border-gray-700 pt-2">
+                                <p class="text-gray-400 text-center">Đang tải dữ liệu mới nhất...</p>
+                            </div>
                         </div>
                         <div class="chart-container">
                             <div class="chart-message-overlay">
@@ -357,18 +343,44 @@
 
                 onOpen(e, device) {
                     const popupElement = e.popup.getElement();
-                    if (!popupElement) return;
-
-                    const chartContainer = popupElement.querySelector('.chart-container');
-                    if (chartContainer) {
-                        App.chart.render(chartContainer, device);
+                    if (popupElement) {
+                        App.chart.render(popupElement, device);
                     }
+                },
+
+                updateBody(popupElement, device, latestData) {
+                    const detailsContainer = popupElement.querySelector('.popup-body-details');
+                    if (!detailsContainer) return;
+
+                    let detailsHtml = '';
+                    const updateTime = new Date(+latestData.ts).toLocaleString('vi-VN');
+
+                    if (device.dataType === 'PRV') {
+                        detailsHtml = `
+                            <div class="popup-body-row"><strong>Áp suất trước:</strong><span>${latestData.pressureBeforeValve}</span></div>
+                            <div class="popup-body-row"><strong>Áp suất sau:</strong><span>${latestData.pressureAfterValve}</span></div>
+                            <div class="popup-body-row"><strong>Lưu lượng:</strong><span>${latestData.waterflow}</span></div>
+                            <div class="popup-body-row"><strong>Lưu lượng tổng:</strong><span>${latestData.Q_TONG}</span></div>
+                        `;
+                    } else { // QTCLN
+                        detailsHtml = `
+                            <div class="popup-body-row"><strong>pH:</strong><span>${latestData.ph}</span></div>
+                            <div class="popup-body-row"><strong>Amoni:</strong><span>${latestData.amoni}</span></div>
+                            <div class="popup-body-row"><strong>DO:</strong><span>${latestData.dissolvedOxygen}</span></div>
+                            <div class="popup-body-row"><strong>COD:</strong><span>${latestData.chemicalOxygenDemand}</span></div>
+                            <div class="popup-body-row"><strong>TSS:</strong><span>${latestData.totalSuspendedSolids}</span></div>
+                        `;
+                    }
+                    detailsHtml += `<div class="popup-body-row mt-1 pt-1 border-t border-gray-600"><strong>Cập nhật:</strong><span>${updateTime}</span></div>`;
+
+                    detailsContainer.innerHTML = detailsHtml;
                 }
             },
             
             // Hàm vẽ biểu đồ
             chart: {
-                async render(container, device) {
+                async render(popupElement, device) {
+                    const container = popupElement.querySelector('.chart-container');
                     const canvas = container.querySelector('.device-chart');
                     const messageOverlay = container.querySelector('.chart-message-overlay');
                     
@@ -379,8 +391,15 @@
                     try {
                         const data = await App.api.getDeviceData(device);
                         
-                        if (!data.length) {
+                        if (data.length > 0) {
+                            const latestData = data[data.length - 1];
+                            App.popup.updateBody(popupElement, device, latestData);
+                        } else {
                             messageOverlay.innerHTML = '<p class="text-gray-400">Không có dữ liệu để hiển thị.</p>';
+                            const detailsContainer = popupElement.querySelector('.popup-body-details');
+                            if (detailsContainer) {
+                                detailsContainer.innerHTML = '<p class="text-gray-400 text-center">Không có dữ liệu mới nhất.</p>';
+                            }
                             return;
                         }
 
@@ -397,7 +416,9 @@
                             datasets = [
                                 { label: 'pH', data: data.map(d => d.ph), borderColor: '#10b981', tension: 0.1, borderWidth: 2, pointRadius: 2 },
                                 { label: 'Amoni', data: data.map(d => d.amoni), borderColor: '#f59e0b', tension: 0.1, borderWidth: 2, pointRadius: 2 },
-                                { label: 'DO', data: data.map(d => d.dissolvedOxygen), borderColor: '#6366f1', tension: 0.1, borderWidth: 2, pointRadius: 2 }
+                                { label: 'DO', data: data.map(d => d.dissolvedOxygen), borderColor: '#6366f1', tension: 0.1, borderWidth: 2, pointRadius: 2 },
+                                { label: 'COD', data: data.map(d => d.chemicalOxygenDemand), borderColor: '#ec4899', tension: 0.1, borderWidth: 2, pointRadius: 2 },
+                                { label: 'TSS', data: data.map(d => d.totalSuspendedSolids), borderColor: '#8b5cf6', tension: 0.1, borderWidth: 2, pointRadius: 2 }
                             ];
                         }
                         
@@ -426,7 +447,6 @@
                 }
             },
             
-            // Các hàm tiện ích
             utils: {
                 showLoader() { App.ui.loaderOverlay.style.opacity = '1'; App.ui.loaderOverlay.classList.remove('hidden'); },
                 hideLoader() { 
@@ -440,18 +460,10 @@
                        setTimeout(() => this.hideError(), 5000);
                     }
                 },
-                hideError() { App.ui.errorContainer.classList.add('hidden'); },
-                parseJwt(token) {
-                    try {
-                        return JSON.parse(atob(token.split('.')[1]));
-                    } catch (e) {
-                        return null;
-                    }
-                }
+                hideError() { App.ui.errorContainer.classList.add('hidden'); }
             }
         };
 
-        // Bắt đầu ứng dụng khi DOM đã sẵn sàng
         document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
 </body>
