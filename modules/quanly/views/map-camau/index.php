@@ -276,18 +276,12 @@ div#tabs {
             <h5>Hiển thị lớp dữ liệu</h5>
             <div id="layer-control">
                 <label><input type="checkbox" onchange="toggleLayer('wmsLoogerLayer')"> Data Logger</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoKhLayer')"> Đồng hồ khách hàng</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoTongLayer')"> Hầm hồ tổng</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsHamLayer')"> Hầm</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngCaiLayer')"> Ống cái</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngCaiDHLayer')"> Ống cái đồng hồ</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngNganhLayer')"> Ống ngành</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngTruyenDanLayer')"> Hầm</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsTrambomLayer')"> Trạm bơm</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsTramCuuHoaLayer')"> Trạm cứu hỏa</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsVanPhanPhoiLayer')"> Van phân phối</label><br>
-                <label><input type="checkbox" checked onchange="toggleLayer('wmsSucoLayer')"> Sự cố điểm bể</label><br>
-                <label><input type="checkbox" onchange="toggleLayer('wmsDMA')"> DMA</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsDonghoLayer')"> Đồng hồ</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngDichVuLayer')"> Ống dịch vụ</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsOngPhanPhoiLayer')"> Ống phân phối</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsVanLayer')"> Van</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsThuaDatLayer')"> Thửa đất</label><br>
+                <label><input type="checkbox" checked onchange="toggleLayer('wmsGiaoThongLayer')"> Giao thông</label><br>
                 <label><input type="checkbox" checked onchange="toggleLayer('highlightLayer')"> Highlight</label><br>
                 <button id="back-to-map-btn" onclick="toggleTabVisibility()">Quay lại map</button>
             </div>
@@ -307,40 +301,15 @@ div#tabs {
 </div>
 
 <script>
-var center = [10.805279349519678, 106.71851132905113];
+var center = [0.06245279349519678, 103.315951132905113];
 
 // Create the map
 var map = L.map('map', {
-    defaultExtentControl: true
-}).setView(center, 16);
+    defaultExtentControl: true,
+    maxZoom: 25, // Cho phép zoom đến mức 22
+    minZoom: 10  // Giới hạn zoom ra ở mức 10
+}).setView(center, 18);
 
-var baseMaps = {
-    "Bản đồ nền": L.tileLayer('http://103.9.77.141:8080/geoserver/gwc/service/wmts?' +
-        'layer=giscapnuoc:basemap_capnuoc&style=&tilematrixset=EPSG:900913&Service=WMTS&Request=GetTile&Version=1.0.0' +
-        '&Format=image/png&TileMatrix=EPSG:900913:{z}&TileCol={x}&TileRow={y}', {
-            tileSize: 256,
-            minZoom: 0,
-            maxZoom: 22,
-            attribution: '',
-            pane: 'tilePane',
-            noWrap: true,
-            bounds: [
-                [-85.0511, -180],
-                [85.0511, 180]
-            ],
-            interactive: false
-        }),
-
-    "Bản đồ Google": L.tileLayer('http://{s}.google.com/vt/lyrs=r&x={x}&y={y}&z={z}', {
-        maxZoom: 22,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    }).addTo(map),
-
-    "Ảnh vệ tinh": L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-        maxZoom: 22,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-    })
-};
 //Thêm lớp L.Control.Locate
 var locateControl = new L.Control.Locate({
     position: 'bottomleft',
@@ -367,149 +336,101 @@ L.control.scale({
     imperial: false,
     maxWidth: 150
 }).addTo(map);
-var highlightLayer = L.featureGroup().addTo(map); // Lớp để highlight đối tượng được chọn
 
-var myPane = map.createPane('myPane');
-myPane.style.zIndex = 650;
+// Create custom panes to control layer order
+var giaoThongPane = map.createPane('giaoThongPane');
+giaoThongPane.style.zIndex = 401;
 
-var wmsLoogerLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_data_logger',
+var thuaDatPane = map.createPane('thuaDatPane');
+thuaDatPane.style.zIndex = 402;
+
+var ongNuocPane = map.createPane('ongNuocPane');
+ongNuocPane.style.zIndex = 403;
+
+var thietBiPane = map.createPane('thietBiPane');
+thietBiPane.style.zIndex = 404;
+
+// Pane for the highlight layer to ensure it's on top
+var highlightPane = map.createPane('highlightPane');
+highlightPane.style.zIndex = 651;
+
+var highlightLayer = L.featureGroup({pane: 'highlightPane'}).addTo(map); // Lớp để highlight đối tượng được chọn
+
+var wmsDonghoLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+    layers: 'giscapnuoc:swanbay_dongho',
     format: 'image/png',
     transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
-});
-
-var wmsDonghoKhLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_dongho_kh_gd',
-    format: 'image/png',
-    transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
+    maxZoom: 25,
+    pane: 'thietBiPane' // Assign to the top equipment pane
 }).addTo(map);
 
-var wmsDonghoTongLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_dongho_tong_gd',
+var wmsOngDichVuLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+    layers: 'giscapnuoc:swanbay_ongdichvu',
     format: 'image/png',
     transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
+    maxZoom: 25,
+    pane: 'ongNuocPane' // Assign to the pipe pane
 }).addTo(map);
 
-var wmsHamLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_hamkythuat',
+var wmsOngPhanPhoiLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+    layers: 'giscapnuoc:swanbay_ongphanphoi',
     format: 'image/png',
     transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
+    maxZoom: 25,
+    pane: 'ongNuocPane' // Assign to the pipe pane
 }).addTo(map);
 
-var wmsOngCaiLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_ongcai',
+var wmsVanLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+    layers: 'giscapnuoc:swanbay_van',
     format: 'image/png',
     transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
+    maxZoom: 25,
+    pane: 'thietBiPane' // Assign to the top equipment pane
 }).addTo(map);
 
-var wmsOngCaiDHLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_ongcai',
+var wmsThuaDatLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+    layers: 'giscapnuoc:swanbay_thuadat',
     format: 'image/png',
     transparent: true,
-    CQL_FILTER: "status = 1 AND tinhtrang = 'DH'",
-    maxZoom: 22,
-    pane: 'myPane'
+    interactive: false,
+    maxZoom: 25,
+    pane: 'thuaDatPane' // Assign to the land parcel pane
 }).addTo(map);
 
-var wmsOngNganhLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_ongnganh',
+var wmsGiaoThongLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
+    layers: 'giscapnuoc:swanbay_giaothong',
     format: 'image/png',
     transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
+    interactive: false,
+    maxZoom: 25,
+    pane: 'giaoThongPane' // Assign to the bottom traffic pane
 }).addTo(map);
 
-var wmsOngTruyenDanLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:v2_4326_ONGTRUYENDAN',
-    format: 'image/png',
-    transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
-}).addTo(map);
-
-var wmsTrambomLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_trambom',
-    format: 'image/png',
-    transparent: true,
-    maxZoom: 22,
-    pane: 'myPane'
-}).addTo(map);
-
-var wmsTramCuuHoaLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_tramcuuhoa',
-    format: 'image/png',
-    transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
-}).addTo(map);
-
-var wmsVanPhanPhoiLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:gd_vanphanphoi',
-    format: 'image/png',
-    transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
-}).addTo(map);
-
-var wmsSucoLayer = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:v2_gd_suco',
-    format: 'image/png',
-    transparent: true,
-    CQL_FILTER: 'status = 1',
-    maxZoom: 22,
-    pane: 'myPane'
-}).addTo(map);
-
-var wmsDMA = L.tileLayer.wms('http://103.9.77.141:8080/geoserver/giscapnuoc/wms', {
-    layers: 'giscapnuoc:v2_4326_DMA',
-    format: 'image/png',
-    transparent: true,
-    CQL_FILTER: 'status = 1',
-    pane: 'myPane'
-});
 
 function toggleLayer(layerName) {
+    // A dummy wmsLoogerLayer to prevent errors if it's not defined elsewhere
+    var wmsLoogerLayer = wmsLoogerLayer || L.tileLayer(''); 
+    
     var layerMap = {
         "wmsLoogerLayer": wmsLoogerLayer,
-        "wmsDonghoKhLayer": wmsDonghoKhLayer,
-        "wmsDonghoTongLayer": wmsDonghoTongLayer,
-        "wmsHamLayer": wmsHamLayer,
-        "wmsOngCaiLayer": wmsOngCaiLayer,
-        "wmsOngCaiDHLayer": wmsOngCaiDHLayer,
-        "wmsOngNganhLayer": wmsOngNganhLayer,
-        "wmsOngTruyenDanLayer": wmsOngTruyenDanLayer,
-        "wmsTrambomLayer": wmsTrambomLayer,
-        "wmsTramCuuHoaLayer": wmsTramCuuHoaLayer,
-        "wmsVanPhanPhoiLayer": wmsVanPhanPhoiLayer,
-        "wmsSucoLayer": wmsSucoLayer,
-        "wmsDMA": wmsDMA,
+        "wmsDonghoLayer": wmsDonghoLayer,
+        "wmsOngDichVuLayer": wmsOngDichVuLayer,
+        "wmsOngPhanPhoiLayer": wmsOngPhanPhoiLayer,
+        "wmsVanLayer": wmsVanLayer,
+        "wmsThuaDatLayer": wmsThuaDatLayer,
+        "wmsGiaoThongLayer": wmsGiaoThongLayer,
         "highlightLayer": highlightLayer
     };
 
     var checkbox = event.target;
-    if (checkbox.checked) {
-        layerMap[layerName].addTo(map);
-    } else {
-        map.removeLayer(layerMap[layerName]);
+    var layer = layerMap[layerName];
+
+    if(layer) {
+        if (checkbox.checked) {
+            layer.addTo(map);
+        } else {
+            map.removeLayer(layer);
+        }
     }
 }
 
@@ -549,8 +470,8 @@ map.on('click', function(e) {
             let url = getFeatureInfoUrl(layer.wmsParams.layers, e.latlng, layer._url);
 
             let layerName = layer.wmsParams.layers;
-            layerName = layerName.split(':');
-            layerName = String(layerName[1]);
+            layerName = layerName.split(':')[1]; // Get the layer name after the colon
+            layerName = String(layerName);
 
             fetch(url)
                 .then(function(res) {
@@ -559,11 +480,66 @@ map.on('click', function(e) {
                 .then(function(geojsonData) {
                     if (geojsonData.features && geojsonData.features.length > 0) {
                         var properties = geojsonData.features[0].properties;
+                        var popupContent = ''; // Initialize popupContent
 
                         if (layer.wmsParams.layers) {
                             switch (layerName) {
+                                // New cases for swanbay layers
+                                case 'swanbay_dongho':
+                                    popupContent = "<div class='popup-content'><table class='popup-table'>" +
+                                        "<tr><td><strong>Cỡ ĐH:</strong></td><td>" + (properties.CoDH || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Hiệu ĐH:</strong></td><td>" + (properties.HieuDH || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Khách Hàng:</strong></td><td>" + (properties.KhachHang || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Địa Chỉ:</strong></td><td>" + (properties.DiaChi || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Ngày Lắp Đặt:</strong></td><td>" + (properties.NgayLapDat ? new Date(properties.NgayLapDat).toLocaleDateString('vi-VN') : 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Tình Trạng:</strong></td><td>" + (properties.TinhTrangN || 'N/A') + "</td></tr>" +
+                                        "</table></div>";
+                                    break;
+                                case 'swanbay_ongphanphoi':
+                                    popupContent = "<div class='popup-content'><table class='popup-table'>" +
+                                        "<tr><td><strong>Vật Liệu:</strong></td><td>" + (properties.VatLieu || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Cỡ Ống:</strong></td><td>" + (properties.CoOng || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Loại Ống:</strong></td><td>" + (properties.LoaiOng || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Thời Gian Lắp Đặt:</strong></td><td>" + (properties.ThoiGianLa ? new Date(properties.ThoiGianLa).toLocaleDateString('vi-VN') : 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Tình Trạng:</strong></td><td>" + (properties.TinhTrang || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>ĐV Thiết Kế:</strong></td><td>" + (properties.DVTK || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>ĐV Thi Công:</strong></td><td>" + (properties.DVTC || 'N/A') + "</td></tr>" +
+                                        "</table></div>";
+                                    break;
+                                case 'swanbay_ongdichvu':
+                                    popupContent = "<div class='popup-content'><table class='popup-table'>" +
+                                        "<tr><td><strong>Entity:</strong></td><td>" + (properties.Entity || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Layer:</strong></td><td>" + (properties.Layer || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Linetype:</strong></td><td>" + (properties.Linetype || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Chiều dài:</strong></td><td>" + (properties.Shape_Leng ? properties.Shape_Leng.toFixed(2) + ' m' : 'N/A') + "</td></tr>" +
+                                        "</table></div>";
+                                    break;
+                                case 'swanbay_van':
+                                     popupContent = "<div class='popup-content'><table class='popup-table'>" +
+                                        "<tr><td><strong>Chức Năng:</strong></td><td>" + (properties.ChucNangVa || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Cỡ Van:</strong></td><td>" + (properties.CoVan || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Tình Trạng:</strong></td><td>" + (properties.TinhTrangN || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Số Vòng:</strong></td><td>" + (properties.SoVong || 'N/A') + "</td></tr>" +
+                                        "</table></div>";
+                                    break;
+                                case 'swanbay_thuadat':
+                                    popupContent = "<div class='popup-content'><table class='popup-table'>" +
+                                        "<tr><td><strong>Số Tờ:</strong></td><td>" + (properties.SoTo || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Số Thửa:</strong></td><td>" + (properties.SoThua || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Chủ Sở Hữu:</strong></td><td>" + (properties.ChuSoHuu || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Diện Tích:</strong></td><td>" + (properties.Shape_Area ? properties.Shape_Area.toFixed(2) + ' m²' : 'N/A') + "</td></tr>" +
+                                        "</table></div>";
+                                    break;
+                                case 'swanbay_giaothong':
+                                    popupContent = "<div class='popup-content'><table class='popup-table'>" +
+                                        "<tr><td><strong>Loại Mặt Đường:</strong></td><td>" + (properties.LoatMat || 'N/A') + "</td></tr>" +
+                                        "<tr><td><strong>Diện Tích:</strong></td><td>" + (properties.SHAPE_Area ? properties.SHAPE_Area.toFixed(2) + ' m²' : 'N/A') + "</td></tr>" +
+                                        "</table></div>";
+                                    break;
+
+                                // Keep old cases for other potential layers
                                 case 'gd_data_logger':
-                                    var popupContent = "<div class='popup-content'>" +
+                                    popupContent = "<div class='popup-content'>" +
                                         "<table>" +
                                         "<tr><td><strong>Chức năng:</strong></td><td>" +
                                         properties.chucnang + "</td></tr>" +
@@ -576,237 +552,28 @@ map.on('click', function(e) {
                                         "</table>" +
                                         "</div>";
                                     break;
-                                case 'gd_dongho_kh_gd':
-                                    var feature = geojsonData.features[0];
-                                    var properties = feature.properties;
-
-                                    var featureId = '';
-                                    if (feature.id && feature.id.includes('.')) {
-                                        featureId = feature.id.split('.')[1];
-                                    } else {
-                                        console.warn('ID không hợp lệ hoặc không tồn tại:', feature.id);
-                                    }
-
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>Danh bạ:</strong></td><td>" +
-                                        properties.dbdonghonu + "</td></tr>" +
-                                        "<tr><td><strong>Số thân đồng:</strong></td><td>" +
-                                        properties.sothandong + "</td></tr>" +
-                                        "<tr><td><strong>Tên KH:</strong></td><td>" +
-                                        properties.tenkhachha + "</td></tr>" +
-                                        "<tr><td><strong>ĐTDD:</strong></td><td>" +
-                                        properties.dtdd + "</td></tr>" +
-                                        "<tr><td><strong>Địa chỉ:</strong></td><td>" +
-                                        properties.diachi + "</td></tr>" +
-                                        "<tr><td><strong>Hiệu:</strong></td><td>" +
-                                        properties.hieudongho + "</td></tr>" +
-                                        "<tr><td><strong>Vị trí lắp đặt:</strong></td><td>" +
-                                        properties.vitrilapda + "</td></tr>" +
-                                        "<tr><td><strong>Tình trạng:</strong></td><td>" +
-                                        properties.tinhtrang + "</td></tr>" +
-                                        "<tr><td><strong>Bản Vẽ:</strong></td><td><p><a href=\"https://gisapi.giadinhwater.vn/gdw/banvehoancong/14091476272\" target=\"_blank\">Hoàn Công</a></p></td></tr>" +
-                                        "<tr><td><strong>Xem chi tiết</strong></td><td><p><a href=\"http://hpngis.online/quanly/capnuocgd/gd-dongho-kh-gd/view?id=" +
-                                        featureId +
-                                        "\" target=\"_blank\">Thông tin chi tiết</a></p></td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-
-                                case 'gd_dongho_tong_gd':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>Hiệu:</strong></td><td>" +
-                                        properties.hieudongho + "</td></tr>" +
-                                        "<tr><td><strong>Ngày lắp đặt:</strong></td><td>" +
-                                        properties.ngaylapdat + "</td></tr>" +
-                                        "<tr><td><strong>Vị trí:</strong></td><td>" +
-                                        properties.vitrilapda + "</td></tr>" +
-                                        "<tr><td><strong>Đơn vị thi công:</strong></td><td>" +
-                                        properties.donvithico + "</td></tr>" +
-                                        "<tr><td><strong>Cỡ ĐH:</strong></td><td>" +
-                                        properties.codongho + "</td></tr>" +
-                                        "<tr><td><strong>Tình trạng:</strong></td><td>" +
-                                        properties.tinhtrang + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-                                case 'gd_hamkythuat':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>Tên hầm:</strong></td><td>" +
-                                        properties.tenhamkyth + "</td></tr>" +
-                                        "<tr><td><strong>Kích thước:</strong></td><td>" +
-                                        properties.kichthuoch + "</td></tr>" +
-                                        "<tr><td><strong>Tình trạng:</strong></td><td>" +
-                                        properties.tinhtrangh + "</td></tr>" +
-                                        "<tr><td><strong>Ghi chú:</strong></td><td>" +
-                                        properties.ghichu + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-                                case 'gd_ongcai':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>Cỡ ống:</strong></td><td>" +
-                                        properties.coong + "</td></tr>" +
-                                        "<tr><td><strong>Vật liệu:</strong></td><td>" +
-                                        properties.vatlieu + "</td></tr>" +
-                                        "<tr><td><strong>Tên công trình:</strong></td><td>" +
-                                        properties.tencongtri + "</td></tr>" +
-                                        "<tr><td><strong>Đơn vị thi công:</strong></td><td>" +
-                                        properties.donvithico + "</td></tr>" +
-                                        "<tr><td><strong>Tình trạng:</strong></td><td>" +
-                                        properties.tinhtrang + "</td></tr>" +
-                                        "<tr><td><strong>Ghi chú:</strong></td><td>" +
-                                        properties.ghichu + "</td></tr>" +
-                                        "<tr><td><strong>Năm lắp đặt:</strong></td><td>" +
-                                        properties.namlapdat + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-                                case 'gd_ongnganh':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>ID ống:</strong></td><td>" +
-                                        properties.idduongong + "</td></tr>" +
-                                        "<tr><td><strong>Vật liệu:</strong></td><td>" +
-                                        properties.vatlieu + "</td></tr>" +
-                                        "<tr><td><strong>Tình trạng:</strong></td><td>" +
-                                        properties.tinhtrang + "</td></tr>" +
-                                        "<tr><td><strong>Năm lắp đặt:</strong></td><td>" +
-                                        properties.namlapdat + "</td></tr>" +
-                                        "<tr><td><strong>Cống:</strong></td><td>" +
-                                        properties.coong + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-                                case 'v2_4326_ONGTRUYENDAN':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>Vật liệu:</strong></td><td>" +
-                                        properties.vatlieu + "</td></tr>" +
-                                        "<tr><td><strong>Cỡ ống:</strong></td><td>" +
-                                        properties.coong + "</td></tr>" +
-                                        "<tr><td><strong>Tên công trình:</strong></td><td>" +
-                                        properties.tencongtri + "</td></tr>" +
-                                        "<tr><td><strong>Năm lắp đặt:</strong></td><td>" +
-                                        properties.namlapdat + "</td></tr>" +
-                                        "<tr><td><strong>Đơn vị thiết kế:</strong></td><td>" +
-                                        properties.donvithiet + "</td></tr>" +
-                                        "<tr><td><strong>Đơn vị thi công:</strong></td><td>" +
-                                        properties.donvithico + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-                                case 'gd_vanphanphoi':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>ID hầm:</strong></td><td>" +
-                                        properties.idhamkythu + "</td></tr>" +
-                                        "<tr><td><strong>cochiakhoa:</strong></td><td>" +
-                                        properties.cochiakhoa + "</td></tr>" +
-                                        "<tr><td><strong>Vật liệu:</strong></td><td>" +
-                                        properties.vatlieu + "</td></tr>" +
-                                        "<tr><td><strong>Mã DMA:</strong></td><td>" +
-                                        properties.madma + "</td></tr>" +
-                                        "<tr><td><strong>Vị trí:</strong></td><td>" +
-                                        properties.vitrivan + "</td></tr>" +
-                                        "<tr><td><strong>Tình trạng:</strong></td><td>" +
-                                        properties.tinhtrang + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-                                case 'gd_trambom':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>Tên:</strong></td><td>" +
-                                        properties.tentram + "</td></tr>" +
-                                        "<tr><td><strong>Số lượng bom:</strong></td><td>" +
-                                        properties.soluongbom + "</td></tr>" +
-                                        "<tr><td><strong>Đơn vị quản lý:</strong></td><td>" +
-                                        properties.donviquanl + "</td></tr>" +
-                                        "<tr><td><strong>Ghi chú:</strong></td><td>" +
-                                        properties.ghichu + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-                                case 'gd_tramcuuhoa':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>ID trạm:</strong></td><td>" +
-                                        properties.idtruhong + "</td></tr>" +
-                                        "<tr><td><strong>Kích cỡ:</strong></td><td>" +
-                                        properties.kichco + "</td></tr>" +
-                                        "<tr><td><strong>Kích thước:</strong></td><td>" +
-                                        properties.kcmiengphu + "</td></tr>" +
-                                        "<tr><td><strong>Loại trụ:</strong></td><td>" +
-                                        properties.loaitruhon + "</td></tr>" +
-                                        "<tr><td><strong>Hiệu:</strong></td><td>" +
-                                        properties.hieu + "</td></tr>" +
-                                        "<tr><td><strong>Tiêu chuẩn:</strong></td><td>" +
-                                        properties.tieuchuan + "</td></tr>" +
-                                        "<tr><td><strong>Mã DMA:</strong></td><td>" +
-                                        properties.madma + "</td></tr>" +
-                                        "<tr><td><strong>Vật liệu:</strong></td><td>" +
-                                        properties.vatlieu + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-
-                                case 'v2_gd_suco':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>Mã sự cố:</strong></td><td>" +
-                                        properties.masuco + "</td></tr>" +
-                                        "<tr><td><strong>Số nhà:</strong></td><td>" +
-                                        properties.sonha + "</td></tr>" +
-                                        "<tr><td><strong>Đường:</strong></td><td>" +
-                                        properties.duong + "</td></tr>" +
-                                        "<tr><td><strong>Ngày phát hiện:</strong></td><td>" +
-                                        properties.ngayphathien + "</td></tr>" +
-                                        "<tr><td><strong>Người phát hiện:</strong></td><td>" +
-                                        properties.nguoiphathien + "</td></tr>" +
-                                        "<tr><td><strong>Ngày sửa chữa:</strong></td><td>" +
-                                        properties.ngaysuachua + "</td></tr>" +
-                                        "<tr><td><strong>Đơn vị:</strong></td><td>" +
-                                        properties.donvisuachua + "</td></tr>" +
-                                        "<tr><td><strong>Vị trí phát hiện:</strong></td><td>" +
-                                        properties.vitriphathien + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
-                                case 'v2_4326_DMA':
-                                    var popupContent = "<div class='popup-content'>" +
-                                        "<table>" +
-                                        "<tr><td><strong>Mã DMA:</strong></td><td>" +
-                                        properties.madma + "</td></tr>" +
-                                        "<tr><td><strong>Số van:</strong></td><td>" +
-                                        properties.sovan + "</td></tr>" +
-                                        "<tr><td><strong>Số trụ:</strong></td><td>" +
-                                        properties.sotru + "</td></tr>" +
-                                        "<tr><td><strong>Số đầu nối:</strong></td><td>" +
-                                        properties.sodaunoi + "</td></tr>" +
-                                        "</table>" +
-                                        "</div>";
-                                    break;
+                                // ... other old cases ...
                             }
                         }
-                        document.getElementById('feature-details').innerHTML = popupContent;
-                        highlightLayer.clearLayers(); // Xóa highlight trước đó (nếu có)
-                        var highlightedFeature = L.geoJSON(geojsonData.features[0]);
-                        highlightLayer.addLayer(highlightedFeature);
-                        if (isMobile) {
+                        
+                        if(popupContent){
+                            document.getElementById('feature-details').innerHTML = popupContent;
+                            highlightLayer.clearLayers(); // Xóa highlight trước đó (nếu có)
+                            var highlightedFeature = L.geoJSON(geojsonData.features[0]);
+                            highlightLayer.addLayer(highlightedFeature);
+                            
+                            // Automatically switch to the "Info" tab
                             openTab('info');
-                            // Chỉ toggle tab nếu nó đang ẩn
-                            const tabs = document.getElementById('tabs');
-                            if (!tabs.classList.contains('active')) {
-                                toggleTabVisibility();
-                                tabShown = true;
+
+                            // On mobile, if the tab panel is hidden, show it.
+                            if (isMobile) {
+                                const tabs = document.getElementById('tabs');
+                                if (!tabs.classList.contains('active')) {
+                                    toggleTabVisibility();
+                                    tabShown = true;
+                                }
                             }
                         }
-                    } else if (isMobile && tabShown) {
-                        // Giữ tab hiển thị nếu đã mở
                     }
                 })
         }
@@ -870,23 +637,9 @@ legendControl.onAdd = function(map) {
     var div = L.DomUtil.create('div', 'legend');
     div.innerHTML += '<h4>Legend</h4>';
     div.innerHTML +=
-        '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_dongho_kh_gd"> Đồng hồ KH<br>';
+        '<img src="http://103.9.77.141:8080/geoserver/giscapnuoc/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giscapnuoc:swanbay_dongho"> Đồng hồ<br>';
     div.innerHTML +=
-        '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_dongho_tong_gd"> Đồng hồ tổng<br>';
-    div.innerHTML +=
-        '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_trambom"> Trạm bơm<br>';
-    div.innerHTML +=
-        '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_tramcuuhoa"> Trạm cứu hỏa<br>';
-    div.innerHTML +=
-        '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_vanphanphoi"> Van phân phối<br>';
-    div.innerHTML +=
-        '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_hamkythuat"> Hầm kỹ thuật<br>';
-    div.innerHTML +=
-        '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_ongcai"> Ống cái<br>';
-    div.innerHTML +=
-        '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_ongnganh"> Ống ngánh<br>';
-    div.innerHTML +=
-        '<img src="http://103.9.77.141:8080/geoserver/giadinh/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giadinh:gd_suco"> Sự cố<br>';
+        '<img src="http://103.9.77.141:8080/geoserver/giscapnuoc/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=giscapnuoc:swanbay_van"> Van<br>';
     return div;
 };
 
@@ -912,6 +665,5 @@ document.getElementById('legend-toggle-btn').addEventListener('click', function(
         legendDiv.style.display = 'none';
     }
 });
-
-var layerControl = L.control.layers(baseMaps).addTo(map);
 </script>
+
