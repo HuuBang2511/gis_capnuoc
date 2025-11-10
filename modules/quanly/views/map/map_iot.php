@@ -6,7 +6,7 @@
     <title>Bản đồ thiết bị IoT</title>
 
     <!-- Thư viện CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -45,7 +45,12 @@
             align-items: center;
             z-index: 2000;
             transition: opacity 0.3s ease;
-            pointer-events: none; /* Cho phép tương tác với bản đồ khi ẩn */
+            pointer-events: none;
+            opacity: 0;
+        }
+        .loader-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
         }
         .loader {
             border: 4px solid #374151; /* gray-700 */
@@ -66,68 +71,96 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 1001;
-            background: rgba(31, 41, 55, 0.7); /* gray-800 với độ trong suốt */
-            backdrop-filter: blur(5px);
+            background: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(8px);
             padding: 0.5rem 1.5rem;
-            border-radius: 0.5rem;
-            border: 1px solid #374151; /* gray-700 */
+            border-radius: 9999px; /* Fully rounded */
+            border: 1px solid #374151;
             color: white;
-            font-size: 1.125rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         /* Tùy chỉnh Popup của Leaflet */
         .leaflet-popup-content-wrapper {
             background-color: #1f2937; /* gray-800 */
             color: #e5e7eb; /* gray-200 */
-            border-radius: 8px;
-            border: 1px solid #4b5563; /* gray-600 */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            border-radius: 12px;
+            border: 1px solid #4b5563;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 0; /* Reset padding mặc định */
+            overflow: hidden;
         }
         .leaflet-popup-content {
-            margin: 0;
-            font-size: 14px;
-            width: auto !important; /* Cho phép co giãn */
-            min-width: 320px; /* Chiều rộng tối thiểu */
-            max-width: 400px;
+            margin: 0 !important;
+            width: 340px !important;
         }
         .leaflet-popup-tip {
-            background: #1f2937; /* gray-800 */
+            background: #1f2937;
+            border: 1px solid #4b5563;
+        }
+        a.leaflet-popup-close-button {
+            color: #9ca3af !important; /* gray-400 */
+            font-size: 20px !important;
+            top: 8px !important;
+            right: 8px !important;
+        }
+        a.leaflet-popup-close-button:hover {
+            color: #e5e7eb !important; /* gray-200 */
         }
         
         /* Nội dung Popup */
         .popup-header {
-            padding: 12px 16px;
+            padding: 16px;
+            background-color: #111827; /* Darker header */
+            border-bottom: 1px solid #374151;
+        }
+        .popup-title {
             font-weight: 700;
-            font-size: 16px;
-            border-bottom: 1px solid #374151; /* gray-700 */
+            font-size: 1.125rem;
+            color: white;
+            margin-bottom: 4px;
         }
+        .popup-subtitle {
+             font-size: 0.875rem;
+             color: #9ca3af;
+        }
+
         .popup-body {
-            padding: 12px 16px;
+            padding: 16px;
         }
-        .popup-body-row {
+        .data-row {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #374151;
+            font-size: 0.875rem;
         }
-        .popup-body-row strong {
+        .data-row:last-child {
+            border-bottom: none;
+        }
+        .data-label {
             color: #9ca3af; /* gray-400 */
-            margin-right: 8px;
-            flex-shrink: 0;
+            font-weight: 500;
         }
-        .popup-body-row span {
-            word-break: break-all;
+        .data-value {
+            color: #e5e7eb; /* gray-200 */
+            font-weight: 600;
             text-align: right;
-        }
-        .popup-body-details {
-             font-size: 12px;
         }
 
         /* Vùng chứa biểu đồ trong Popup */
+        .chart-wrapper {
+            padding: 16px;
+            background-color: rgba(17, 24, 39, 0.5); /* Semi-transparent dark background for chart */
+            border-top: 1px solid #374151;
+        }
         .chart-container {
             position: relative;
-            height: 180px;
-            padding: 12px;
+            height: 200px;
+            width: 100%;
         }
         .chart-message-overlay {
             position: absolute;
@@ -135,58 +168,78 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 12px;
+            background: rgba(31, 41, 55, 0.8);
+            z-index: 10;
+            border-radius: 8px;
         }
 
         /* Biểu tượng Marker tùy chỉnh */
         .custom-marker-icon {
-            text-align: center;
-            color: white;
-            border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 14px;
-            width: 32px;
-            height: 32px;
-            border: 2px solid white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            transition: transform 0.2s ease;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .custom-marker-icon i {
+            color: white;
+            font-size: 16px;
         }
         .custom-marker-icon:hover {
-            transform: scale(1.2);
+            transform: scale(1.15) translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
         }
-        .prv-marker { background-color: #3b82f6; } /* blue-500 */
-        .qtcln-marker { background-color: #10b981; } /* emerald-500 */
+        .prv-marker { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .qtcln-marker { background: linear-gradient(135deg, #10b981, #059669); }
         
     </style>
 
     <!-- Thư viện JavaScript -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Load Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Load Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div id="iot-map-wrapper">
-        <h1 class="page-title">Bản đồ thiết bị IoT</h1>
+        <div class="page-title">
+            <i class="fa-solid fa-map-location-dot mr-2"></i> Bản đồ thiết bị IoT
+        </div>
         
-        <div id="loader-overlay" class="loader-overlay"><div class="loader"></div></div>
+        <div id="loader-overlay" class="loader-overlay active">
+            <div class="flex flex-col items-center">
+                <div class="loader mb-4"></div>
+                <p class="text-gray-300 font-medium">Đang tải dữ liệu...</p>
+            </div>
+        </div>
         
         <div id="map"></div>
         
-        <div id="error-container" class="hidden fixed bottom-4 left-4 max-w-sm p-4 bg-red-900 border border-red-700 rounded-lg text-red-300 z-[1001] flex items-start">
-            <span id="error-message" class="flex-grow"></span>
-            <button onclick="App.utils.hideError()" class="ml-4 text-red-200 hover:text-white">&times;</button>
+        <!-- Error Toast -->
+        <div id="error-container" class="hidden fixed bottom-5 left-5 right-5 md:left-auto md:right-5 md:max-w-md bg-red-900/90 border-l-4 border-red-500 text-red-100 p-4 rounded shadow-lg z-[9999] backdrop-blur-sm flex items-start transition-all duration-300 ease-in-out transform translate-y-10 opacity-0">
+            <div class="flex-shrink-0 mr-3">
+                <i class="fas fa-exclamation-circle text-red-400 text-xl"></i>
+            </div>
+            <div class="flex-grow">
+                <h3 class="font-bold mb-1">Đã xảy ra lỗi</h3>
+                <p id="error-message" class="text-sm opacity-90"></p>
+            </div>
+            <button onclick="App.utils.hideError()" class="ml-4 text-red-300 hover:text-white transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
     </div>
 
     <script>
         const App = {
-            // Cấu hình và hằng số
+            // Cấu hình ứng dụng
             config: {
                 apiBaseUrl: 'https://iot-apis.saigonvalve.vn/v1',
                 map: {
-                    initialView: [10.7769, 106.7009],
-                    initialZoom: 12,
+                    initialView: [16.0471, 108.2068], // Mặc định: Đà Nẵng (trung tâm VN để dễ nhìn nếu chưa load đc vị trí)
+                    initialZoom: 6,
                 },
                 credentials: {
                     emailOrUsername: "demo2",
@@ -194,7 +247,7 @@
                 }
             },
 
-            // Trạng thái ứng dụng
+            // Trạng thái global
             state: {
                 map: null,
                 deviceLayerGroup: null,
@@ -202,7 +255,7 @@
                 accessToken: null,
             },
 
-            // Tham chiếu đến các phần tử UI
+            // UI Elements
             ui: {
                 loaderOverlay: null,
                 errorContainer: null,
@@ -213,259 +266,443 @@
              * Khởi tạo ứng dụng
              */
             async init() {
+                console.log("App initializing...");
                 this.ui.loaderOverlay = document.getElementById('loader-overlay');
                 this.ui.errorContainer = document.getElementById('error-container');
                 this.ui.errorMessage = document.getElementById('error-message');
 
-                this.utils.showLoader();
                 this.map.init();
 
                 try {
+                    // 1. Đăng nhập để lấy Token
+                    console.log("Đang đăng nhập...");
                     const loginData = await this.api.login();
                     this.state.accessToken = loginData.accessToken;
-                    const roleId = loginData.userData?.roleId;
+                    console.log("Đăng nhập thành công.");
 
-                    if (!roleId) {
-                        throw new Error("Không thể lấy Role ID từ phản hồi đăng nhập.");
-                    }
+                    // 3. Lấy danh sách thiết bị
+                    // Không cần roleId nữa
+                    console.log(`Đang lấy danh sách thiết bị...`);
+                    const devices = await this.api.getDevices();
+                    console.log(`Đã tìm thấy ${devices.length} thiết bị.`);
 
-                    const devices = await this.api.getDevices(roleId);
                     if (!devices || devices.length === 0) {
-                        this.utils.showError("Không tìm thấy thiết bị nào.", false);
+                        this.utils.showError("Không tìm thấy thiết bị nào cho tài khoản này.", false);
+                    } else {
+                        // 4. Hiển thị lên bản đồ
+                        this.map.addDevicesToMap(devices);
                     }
-
-                    this.map.addDevicesToMap(devices);
 
                 } catch (error) {
-                    console.error("Lỗi khởi tạo:", error);
-                    this.utils.showError(error.message);
+                    console.error("Lỗi khởi tạo nghiêm trọng:", error);
+                    this.utils.showError(`Không thể tải dữ liệu: ${error.message}. Vui lòng kiểm tra kết nối mạng hoặc liên hệ admin.`, false);
                 } finally {
                     this.utils.hideLoader();
                 }
             },
             
-            // Các hàm tương tác với API
+            // --- Tầng API ---
             api: {
                 async login() {
-                    const response = await fetch(`${App.config.apiBaseUrl}/auth/login`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(App.config.credentials)
-                    });
-                    if (!response.ok) throw new Error(`Đăng nhập thất bại: ${response.statusText}`);
-                    return await response.json();
+                    try {
+                        const response = await fetch(`${App.config.apiBaseUrl}/auth/login`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(App.config.credentials)
+                        });
+                        if (!response.ok) {
+                            if (response.status === 401) throw new Error("Sai tên đăng nhập hoặc mật khẩu.");
+                            throw new Error(`Lỗi máy chủ (${response.status})`);
+                        }
+                        return await response.json();
+                    } catch (e) {
+                         throw new Error(`Lỗi kết nối đăng nhập: ${e.message}`);
+                    }
                 },
 
-                async getDevices(roleId) {
-                    const response = await fetch(`${App.config.apiBaseUrl}/role/device?roleId=${roleId}`, {
+                async getDevices() {
+                    // CẬP NHẬT: Bỏ roleId khỏi query string
+                    const url = `${App.config.apiBaseUrl}/device`;
+                    console.log(`Calling API: ${url}`);
+                    
+                    const response = await fetch(url, {
                         headers: { Authorization: `Bearer ${App.state.accessToken}` }
                     });
-                    if (!response.ok) throw new Error(`Không thể lấy danh sách thiết bị: ${response.statusText}`);
+                    if (!response.ok) throw new Error(`Không thể lấy danh sách thiết bị (${response.status})`);
                     const data = await response.json();
-                    return data.data || [];
+                    return Array.isArray(data.data) ? data.data : [];
                 },
                 
                 async getDeviceData(device) {
-                    const endpoint = device.dataType === 'PRV' ? 'vga-data' : 'carbonate-hardness-data';
-                    const url = `${App.config.apiBaseUrl}/${endpoint}?deviceId=${device.deviceId}&sort=DESC&perPage=13&page=1`;
-                    const response = await fetch(url, { headers: { Authorization: `Bearer ${App.state.accessToken}` } });
-                    if (!response.ok) throw new Error(`Không thể lấy dữ liệu biểu đồ: ${response.statusText}`);
+                    // CẬP NHẬT: Đổi endpoint 'vga-data' thành 'prv-data' vì khả năng cao endpoint cũ sai tên.
+                    const endpoint = (device.dataType === 'PRV') ? 'prv-data' : 'carbonate-hardness-data';
+
+                    // CẬP NHẬT QUAN TRỌNG: Thử lấy ID từ nhiều trường khác nhau để chắc chắn
+                    const actualDeviceId = device.id || device.deviceId || device.device_id;
+
+                    if (!actualDeviceId) {
+                         console.error("[DEBUG] Không tìm thấy ID thiết bị trong đối tượng:", device);
+                         throw new Error("Thiết bị không có ID hợp lệ.");
+                    }
+                    
+                    const url = `${App.config.apiBaseUrl}/${endpoint}?deviceId=${actualDeviceId}&sort=DESC&perPage=20&page=1`;
+                    console.log(`[DEBUG] Đang gọi API lấy dữ liệu biểu đồ: ${url}`);
+                    
+                    const response = await fetch(url, { 
+                        headers: { Authorization: `Bearer ${App.state.accessToken}` } 
+                    });
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error(`[DEBUG] API lỗi ${response.status}: ${errorText}`);
+                        throw new Error(`Không thể tải dữ liệu lịch sử (Mã lỗi: ${response.status})`);
+                    }
                     const result = await response.json();
-                    return (result.data || []).reverse();
+                    // Đảo ngược mảng để hiển thị trên biểu đồ từ cũ -> mới (trái -> phải)
+                    return (Array.isArray(result.data) ? result.data : []).reverse();
                 }
             },
 
-            // Các hàm liên quan đến bản đồ
+            // --- Tầng Bản Đồ ---
             map: {
                 init() {
-                    App.state.map = L.map('map').setView(App.config.map.initialView, App.config.map.initialZoom);
-                    const dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: 'CartoDB' }).addTo(App.state.map);
-                    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'OpenStreetMap' });
-                    const satellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', { subdomains:['mt0','mt1','mt2','mt3'], attribution: 'Google' });
+                    // Khởi tạo map
+                    App.state.map = L.map('map', {
+                        zoomControl: false // Sẽ add lại ở vị trí khác nếu muốn
+                    }).setView(App.config.map.initialView, App.config.map.initialZoom);
 
-                    const baseMaps = { "Bản đồ tối": dark, "Đường phố": osm, "Vệ tinh": satellite };
-                    App.state.deviceLayerGroup = L.featureGroup().addTo(App.state.map);
-                    L.control.layers(baseMaps, { "Thiết bị": App.state.deviceLayerGroup }).addTo(App.state.map);
+                    // Thêm nút zoom ở góc phải dưới cho dễ thao tác một tay trên mobile
+                    L.control.zoom({ position: 'bottomright' }).addTo(App.state.map);
+
+                    // Các lớp bản đồ nền
+                    const dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { 
+                        attribution: '&copy; OpenStreetMap, &copy; CartoDB',
+                        maxZoom: 20
+                    }).addTo(App.state.map); // Mặc định chọn Dark theme cho ngầu
+
+                    const googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+                        maxZoom: 20,
+                        subdomains:['mt0','mt1','mt2','mt3'],
+                        attribution: 'Google Maps'
+                    });
+
+                    const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; OpenStreetMap'
+                    });
+
+                    // Layer Group cho markers
+                    App.state.deviceLayerGroup = L.markerClusterGroup ? L.markerClusterGroup() : L.featureGroup();
+                    App.state.map.addLayer(App.state.deviceLayerGroup);
+
+                    // Điều khiển lớp bản đồ
+                    const baseMaps = { "Bản đồ tối": dark, "Vệ tinh Hybrid": googleHybrid, "Bản đồ sáng": osm };
+                    L.control.layers(baseMaps, null, { position: 'topright' }).addTo(App.state.map);
+
+                    // QUAN TRỌNG: Sự kiện đóng popup để dọn dẹp biểu đồ
+                    App.state.map.on('popupclose', function(e) {
+                        if (App.state.chartInstance) {
+                            // console.log("Dọn dẹp biểu đồ cũ...");
+                            App.state.chartInstance.destroy();
+                            App.state.chartInstance = null;
+                        }
+                    });
                 },
 
                 addDevicesToMap(devices) {
+                    let validDeviceCount = 0;
                     devices.forEach(device => {
-                        const lat = parseFloat(device.device?.latitude);
-                        const lng = parseFloat(device.device?.longitude);
+                        // Fallback linh hoạt cho cấu trúc dữ liệu latitude/longitude
+                        const latStr = device.device?.latitude || device.latitude;
+                        const lngStr = device.device?.longitude || device.longitude;
+                        const lat = parseFloat(latStr);
+                        const lng = parseFloat(lngStr);
 
-                        if (isNaN(lat) || isNaN(lng)) {
-                            console.warn(`Bỏ qua thiết bị ${device.deviceId} vì tọa độ không hợp lệ.`);
+                        // Bỏ qua nếu tọa độ không hợp lệ
+                        if (isNaN(lat) || isNaN(lng) || lat === 0 || lng === 0) {
+                            // CẬP NHẬT: Thử lấy ID để log cho chính xác
+                            const logId = device.id || device.deviceId || 'unknown';
+                            console.warn(`Thiết bị ID ${logId} có tọa độ không hợp lệ: [${latStr}, ${lngStr}]`);
                             return;
                         }
                         
-                        const isPrv = device.device?.name?.toLowerCase().includes('prv');
-                        device.dataType = isPrv ? 'PRV' : 'QTCLN';
+                        validDeviceCount++;
 
+                        // Xác định loại thiết bị (Normalized)
+                        const deviceName = (device.device?.name || device.name || '').toLowerCase();
+                        const isPrv = deviceName.includes('prv') || (device.dataType && device.dataType.toUpperCase() === 'PRV');
+                        device.dataType = isPrv ? 'PRV' : 'QTCLN'; // Gán chuẩn loại dữ liệu để dùng sau này
+
+                        // Tạo icon tùy chỉnh
                         const icon = L.divIcon({
-                            html: `<i class="fa-solid ${isPrv ? 'fa-faucet' : 'fa-flask-vial'}"></i>`,
+                            html: `<i class="fa-solid ${isPrv ? 'fa-faucet-drip' : 'fa-flask'}"></i>`,
                             className: `custom-marker-icon ${isPrv ? 'prv-marker' : 'qtcln-marker'}`,
-                            iconSize: [32, 32],
-                            iconAnchor: [16, 16]
+                            iconSize: [40, 40], // Kích thước lớn hơn chút cho dễ bấm trên mobile
+                            iconAnchor: [20, 20],
+                            popupAnchor: [0, -25]
                         });
 
-                        const marker = L.marker([lat, lng], { icon });
-                        marker.bindPopup(() => App.popup.createContent(device), { minWidth: 320 });
+                        const marker = L.marker([lat, lng], { icon: icon });
+                        
+                        // Bind popup và gắn sự kiện mở
+                        marker.bindPopup(() => App.popup.createSkeleton(device), { 
+                            minWidth: 340,
+                            maxWidth: 340,
+                            closeButton: true,
+                            autoPanPadding: [20, 20]
+                        });
                         marker.on('popupopen', (e) => App.popup.onOpen(e, device));
+                        
                         App.state.deviceLayerGroup.addLayer(marker);
                     });
 
-                    if (App.state.deviceLayerGroup.getLayers().length > 0) {
-                        App.state.map.fitBounds(App.state.deviceLayerGroup.getBounds().pad(0.2));
+                    // Zoom bản đồ để thấy tất cả thiết bị
+                    if (validDeviceCount > 0) {
+                         const bounds = App.state.deviceLayerGroup.getBounds();
+                         if (bounds.isValid()) {
+                             App.state.map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+                         }
+                    } else {
+                        App.utils.showError("Không có thiết bị nào có tọa độ hợp lệ để hiển thị.");
                     }
                 }
             },
             
-            // Các hàm liên quan đến Popup
+            // --- Tầng Popup & Hiển thị chi tiết ---
             popup: {
-                createContent(device) {
+                // Tạo khung HTML tĩnh trước khi có dữ liệu
+                createSkeleton(device) {
+                    const deviceName = device.device?.name || device.name || 'Thiết bị không tên';
+                    // CẬP NHẬT: Lấy ID hiển thị cho đúng
+                    const deviceId = device.id || device.deviceId || 'N/A';
+                    const typeLabel = device.dataType === 'PRV' ? 'Van giảm áp (PRV)' : 'Quan trắc chất lượng nước';
+                    
+                    // Dùng ID làm định danh duy nhất cho các element trong popup
+                    const uniqueId = deviceId.toString().replace(/[^a-zA-Z0-9]/g, '');
+
                     return `
-                        <div class="popup-header">${device.device?.name || 'Thiết bị không tên'}</div>
-                        <div class="popup-body">
-                            <div class="popup-body-row"><strong>ID:</strong><span>${device.deviceId}</span></div>
-                            <div class="popup-body-row"><strong>Loại:</strong><span>${device.dataType}</span></div>
-                            <div class="popup-body-details mt-2 border-t border-gray-700 pt-2">
-                                <p class="text-gray-400 text-center">Đang tải dữ liệu mới nhất...</p>
+                        <div class="popup-header">
+                            <div class="popup-title">${deviceName}</div>
+                            <div class="popup-subtitle">${typeLabel} <span class="opacity-50 mx-1">|</span> ID: ${deviceId}</div>
+                        </div>
+                        
+                        <div id="popup-details-${uniqueId}" class="popup-body">
+                            <!-- Placeholder khi đang tải -->
+                            <div class="flex items-center justify-center py-4 space-x-2 text-blue-400">
+                                <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                                <span class="text-sm">Đang tải dữ liệu mới nhất...</span>
                             </div>
                         </div>
-                        <div class="chart-container">
-                            <div class="chart-message-overlay">
-                                <div class="loader"></div>
+
+                        <div class="chart-wrapper">
+                            <div class="chart-container">
+                                <div class="chart-message-overlay">
+                                    <div class="loader" style="width: 30px; height: 30px; border-width: 3px;"></div>
+                                </div>
+                                <canvas id="chart-${uniqueId}"></canvas>
                             </div>
-                            <canvas class="device-chart"></canvas>
                         </div>
                     `;
                 },
 
+                // Khi popup mở ra thì mới gọi API lấy dữ liệu chi tiết
                 onOpen(e, device) {
-                    const popupElement = e.popup.getElement();
-                    if (popupElement) {
-                        App.chart.render(popupElement, device);
-                    }
+                    const popupNode = e.popup.getElement();
+                    const deviceId = device.id || device.deviceId || 'N/A';
+                    const uniqueId = deviceId.toString().replace(/[^a-zA-Z0-9]/g, '');
+
+                    // Tìm canvas trong popup vừa mở
+                    const canvas = popupNode.querySelector(`#chart-${uniqueId}`);
+                    const messageOverlay = popupNode.querySelector('.chart-message-overlay');
+                    const detailsContainer = popupNode.querySelector(`#popup-details-${uniqueId}`);
+
+                    if (!canvas || !detailsContainer) return;
+
+                    // Gọi hàm render chính
+                    App.chart.fetchAndRender(device, canvas, messageOverlay, detailsContainer);
                 },
 
-                updateBody(popupElement, device, latestData) {
-                    const detailsContainer = popupElement.querySelector('.popup-body-details');
-                    if (!detailsContainer) return;
-
-                    let detailsHtml = '';
-                    const updateTime = new Date(+latestData.ts).toLocaleString('vi-VN');
-
-                    if (device.dataType === 'PRV') {
-                        detailsHtml = `
-                            <div class="popup-body-row"><strong>Áp suất trước:</strong><span>${latestData.pressureBeforeValve}</span></div>
-                            <div class="popup-body-row"><strong>Áp suất sau:</strong><span>${latestData.pressureAfterValve}</span></div>
-                            <div class="popup-body-row"><strong>Lưu lượng:</strong><span>${latestData.waterflow}</span></div>
-                            <div class="popup-body-row"><strong>Lưu lượng tổng:</strong><span>${latestData.Q_TONG}</span></div>
-                        `;
-                    } else { // QTCLN
-                        detailsHtml = `
-                            <div class="popup-body-row"><strong>pH:</strong><span>${latestData.ph}</span></div>
-                            <div class="popup-body-row"><strong>Amoni:</strong><span>${latestData.amoni}</span></div>
-                            <div class="popup-body-row"><strong>DO:</strong><span>${latestData.dissolvedOxygen}</span></div>
-                            <div class="popup-body-row"><strong>COD:</strong><span>${latestData.chemicalOxygenDemand}</span></div>
-                            <div class="popup-body-row"><strong>TSS:</strong><span>${latestData.totalSuspendedSolids}</span></div>
-                        `;
+                // Cập nhật phần text chi tiết sau khi có data
+                updateDetailsBox(container, device, latestData) {
+                    if (!latestData) {
+                        container.innerHTML = '<div class="text-center text-gray-500 py-2">Không có dữ liệu cảm biến.</div>';
+                        return;
                     }
-                    detailsHtml += `<div class="popup-body-row mt-1 pt-1 border-t border-gray-600"><strong>Cập nhật:</strong><span>${updateTime}</span></div>`;
 
-                    detailsContainer.innerHTML = detailsHtml;
+                    const ts = new Date(+latestData.ts);
+                    const timeStr = ts.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                    const dateStr = ts.toLocaleDateString('vi-VN');
+
+                    // Sử dụng helper để format số an toàn
+                    const fmt = App.utils.safeToFixed;
+                    const fmtLocale = App.utils.safeLocaleString;
+
+                    let html = '';
+                    if (device.dataType === 'PRV') {
+                         html += `
+                            <div class="data-row"><span class="data-label">Áp lực trước</span><span class="data-value text-blue-400">${fmt(latestData.pressureBeforeValve, 2)} bar</span></div>
+                            <div class="data-row"><span class="data-label">Áp lực sau</span><span class="data-value text-red-400">${fmt(latestData.pressureAfterValve, 2)} bar</span></div>
+                            <div class="data-row"><span class="data-label">Lưu lượng</span><span class="data-value text-orange-400">${fmt(latestData.waterflow, 2)} m³/h</span></div>
+                            <div class="data-row"><span class="data-label">Tổng lưu lượng</span><span class="data-value">${fmtLocale(latestData.Q_TONG)} m³</span></div>
+                         `;
+                    } else {
+                        // QTCLN
+                         html += `
+                            <div class="grid grid-cols-2 gap-x-4">
+                                <div class="data-row"><span class="data-label">pH</span><span class="data-value text-green-400">${fmt(latestData.ph, 1)}</span></div>
+                                <div class="data-row"><span class="data-label">COD</span><span class="data-value text-pink-400">${fmt(latestData.chemicalOxygenDemand, 1)}</span></div>
+                                <div class="data-row"><span class="data-label">Amoni</span><span class="data-value text-yellow-400">${fmt(latestData.amoni, 2)}</span></div>
+                                <div class="data-row"><span class="data-label">TSS</span><span class="data-value text-purple-400">${fmt(latestData.totalSuspendedSolids, 1)}</span></div>
+                                <div class="data-row col-span-2"><span class="data-label">Oxy hòa tan (DO)</span><span class="data-value text-indigo-400">${fmt(latestData.dissolvedOxygen, 2)} mg/L</span></div>
+                            </div>
+                         `;
+                    }
+
+                    html += `<div class="mt-3 pt-2 border-t border-gray-700 text-xs text-gray-500 flex justify-between">
+                        <span>Cập nhật cuối:</span>
+                        <span>${timeStr} - ${dateStr}</span>
+                    </div>`;
+
+                    container.innerHTML = html;
                 }
             },
             
-            // Hàm vẽ biểu đồ
+            // --- Tầng Biểu đồ ---
             chart: {
-                async render(popupElement, device) {
-                    const container = popupElement.querySelector('.chart-container');
-                    const canvas = container.querySelector('.device-chart');
-                    const messageOverlay = container.querySelector('.chart-message-overlay');
-                    
-                    if (App.state.chartInstance) {
-                        App.state.chartInstance.destroy();
-                    }
-
+                async fetchAndRender(device, canvasEl, overlayEl, detailsEl) {
                     try {
+                        // CẬP NHẬT: Log đối tượng thiết bị để debug
+                        console.log("[DEBUG] Đang vẽ biểu đồ cho thiết bị:", device);
                         const data = await App.api.getDeviceData(device);
-                        
-                        if (data.length > 0) {
-                            const latestData = data[data.length - 1];
-                            App.popup.updateBody(popupElement, device, latestData);
-                        } else {
-                            messageOverlay.innerHTML = '<p class="text-gray-400">Không có dữ liệu để hiển thị.</p>';
-                            const detailsContainer = popupElement.querySelector('.popup-body-details');
-                            if (detailsContainer) {
-                                detailsContainer.innerHTML = '<p class="text-gray-400 text-center">Không có dữ liệu mới nhất.</p>';
-                            }
-                            return;
+
+                        if (!data || data.length === 0) {
+                             overlayEl.innerHTML = '<span class="text-gray-400 text-sm">Chưa có dữ liệu lịch sử</span>';
+                             App.popup.updateDetailsBox(detailsEl, device, null);
+                             return;
                         }
 
-                        const labels = data.map(d => new Date(+d.ts).toLocaleTimeString('vi-VN'));
-                        let datasets;
+                        // Ẩn overlay loading
+                        overlayEl.style.display = 'none';
 
+                        // Cập nhật thông tin mới nhất vào bảng chi tiết
+                        const latestData = data[data.length - 1];
+                        App.popup.updateDetailsBox(detailsEl, device, latestData);
+
+                        // Chuẩn bị dữ liệu vẽ biểu đồ
+                        // Chỉ lấy tối đa 20 điểm dữ liệu gần nhất để biểu đồ thoáng
+                        const chartData = data.slice(-20); 
+                        const labels = chartData.map(d => new Date(+d.ts).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}));
+                        
+                        let datasets = [];
                         if (device.dataType === 'PRV') {
                             datasets = [
-                                { label: 'Áp suất trước', data: data.map(d => d.pressureBeforeValve), borderColor: '#3b82f6', tension: 0.1, borderWidth: 2, pointRadius: 2 },
-                                { label: 'Áp suất sau', data: data.map(d => d.pressureAfterValve), borderColor: '#ef4444', tension: 0.1, borderWidth: 2, pointRadius: 2 },
-                                { label: 'Lưu lượng', data: data.map(d => d.waterflow), borderColor: '#f97316', tension: 0.1, borderWidth: 2, pointRadius: 2 }
+                                { label: 'Trước (bar)', data: chartData.map(d => d.pressureBeforeValve), borderColor: '#60a5fa', backgroundColor: 'rgba(96, 165, 250, 0.1)', tension: 0.3, borderWidth: 2, pointRadius: 0, pointHitRadius: 10 },
+                                { label: 'Sau (bar)', data: chartData.map(d => d.pressureAfterValve), borderColor: '#f87171', backgroundColor: 'rgba(248, 113, 113, 0.1)', tension: 0.3, borderWidth: 2, pointRadius: 0, pointHitRadius: 10 },
+                                // Flow thường có đơn vị khác nên có thể cần trục Y thứ 2, nhưng tạm thời vẽ chung
+                                { label: 'Lưu lượng', data: chartData.map(d => d.waterflow), borderColor: '#fb923c', borderDash: [5, 5], tension: 0.3, borderWidth: 1.5, pointRadius: 0 }
                             ];
                         } else {
                             datasets = [
-                                { label: 'pH', data: data.map(d => d.ph), borderColor: '#10b981', tension: 0.1, borderWidth: 2, pointRadius: 2 },
-                                { label: 'Amoni', data: data.map(d => d.amoni), borderColor: '#f59e0b', tension: 0.1, borderWidth: 2, pointRadius: 2 },
-                                { label: 'DO', data: data.map(d => d.dissolvedOxygen), borderColor: '#6366f1', tension: 0.1, borderWidth: 2, pointRadius: 2 },
-                                { label: 'COD', data: data.map(d => d.chemicalOxygenDemand), borderColor: '#ec4899', tension: 0.1, borderWidth: 2, pointRadius: 2 },
-                                { label: 'TSS', data: data.map(d => d.totalSuspendedSolids), borderColor: '#8b5cf6', tension: 0.1, borderWidth: 2, pointRadius: 2 }
+                                { label: 'pH', data: chartData.map(d => d.ph), borderColor: '#34d399', tension: 0.3, borderWidth: 2, pointRadius: 0 },
+                                { label: 'COD', data: chartData.map(d => d.chemicalOxygenDemand), borderColor: '#f472b6', tension: 0.3, borderWidth: 2, pointRadius: 0, hidden: true }, // Ẩn bớt cho đỡ rối
+                                { label: 'DO', data: chartData.map(d => d.dissolvedOxygen), borderColor: '#818cf8', tension: 0.3, borderWidth: 2, pointRadius: 0 }
                             ];
                         }
-                        
-                        messageOverlay.style.display = 'none';
 
-                        App.state.chartInstance = new Chart(canvas, {
+                        // Đảm bảo hủy biểu đồ cũ nếu có (dù đã xử lý ở popupclose nhưng cẩn thận vẫn hơn)
+                        if (App.state.chartInstance) {
+                            App.state.chartInstance.destroy();
+                        }
+
+                        // Vẽ biểu đồ mới
+                        App.state.chartInstance = new Chart(canvasEl, {
                             type: 'line',
                             data: { labels, datasets },
                             options: {
                                 responsive: true,
                                 maintainAspectRatio: false,
-                                scales: { 
-                                    x: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(156, 163, 175, 0.1)' } }, 
-                                    y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(156, 163, 175, 0.1)' } } 
+                                interaction: {
+                                    mode: 'index',
+                                    intersect: false,
                                 },
-                                plugins: { 
-                                    legend: { labels: { color: '#e5e7eb', boxWidth: 15, padding: 15 } } 
+                                scales: {
+                                    x: {
+                                        ticks: { color: '#6b7280', maxRotation: 0, font: {size: 10} },
+                                        grid: { color: 'rgba(107, 114, 128, 0.1)' }
+                                    },
+                                    y: {
+                                        beginAtZero: true,
+                                        ticks: { color: '#6b7280', font: {size: 10} },
+                                        grid: { color: 'rgba(107, 114, 128, 0.1)' }
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                        align: 'end',
+                                        labels: { color: '#9ca3af', boxWidth: 12, padding: 10, font: {size: 11} }
+                                    },
+                                    tooltip: {
+                                        mode: 'index',
+                                        intersect: false,
+                                        backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                                        titleColor: '#e5e7eb',
+                                        bodyColor: '#e5e7eb',
+                                        borderColor: '#374151',
+                                        borderWidth: 1
+                                    }
                                 }
                             }
                         });
 
                     } catch (error) {
-                        console.error("Lỗi vẽ biểu đồ:", error);
-                        messageOverlay.innerHTML = `<p class="text-red-400 text-center">${error.message}</p>`;
+                        console.error("Chart render error:", error);
+                        overlayEl.innerHTML = `<span class="text-red-400 text-sm px-4 text-center">Lỗi tải dữ liệu: ${error.message}</span>`;
                     }
                 }
             },
             
+            // --- Các tiện ích ---
             utils: {
-                showLoader() { App.ui.loaderOverlay.style.opacity = '1'; App.ui.loaderOverlay.classList.remove('hidden'); },
+                // Hàm format số an toàn (tránh lỗi khi value là string)
+                safeToFixed(value, decimals) {
+                    const num = Number(value);
+                    return isNaN(num) ? '--' : num.toFixed(decimals);
+                },
+                // Hàm format số theo locale Việt Nam an toàn
+                safeLocaleString(value) {
+                    const num = Number(value);
+                    return isNaN(num) ? '--' : num.toLocaleString('vi-VN');
+                },
+
+                showLoader() { 
+                    App.ui.loaderOverlay.classList.remove('hidden');
+                    // Trigger reflow để transition hoạt động
+                    void App.ui.loaderOverlay.offsetWidth; 
+                    App.ui.loaderOverlay.classList.add('active');
+                },
                 hideLoader() { 
-                    App.ui.loaderOverlay.style.opacity = '0';
+                    App.ui.loaderOverlay.classList.remove('active');
                     setTimeout(() => App.ui.loaderOverlay.classList.add('hidden'), 300); 
                 },
                 showError(message, autoHide = true) {
                     App.ui.errorMessage.textContent = message;
-                    App.ui.errorContainer.classList.remove('hidden');
-                    if(autoHide) {
-                       setTimeout(() => this.hideError(), 5000);
+                    App.ui.errorContainer.classList.remove('hidden', 'translate-y-10', 'opacity-0');
+                    
+                    if (this.errorTimeout) clearTimeout(this.errorTimeout);
+                    if (autoHide) {
+                       this.errorTimeout = setTimeout(() => this.hideError(), 6000);
                     }
                 },
-                hideError() { App.ui.errorContainer.classList.add('hidden'); }
+                hideError() { 
+                    App.ui.errorContainer.classList.add('translate-y-10', 'opacity-0');
+                    setTimeout(() => App.ui.errorContainer.classList.add('hidden'), 300);
+                }
             }
         };
 
+        // Khởi chạy khi DOM sẵn sàng
         document.addEventListener('DOMContentLoaded', () => App.init());
     </script>
 </body>
 </html>
-
