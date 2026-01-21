@@ -273,7 +273,7 @@ $this->title = 'Bản đồ GIS - Quản lý Hạ tầng';
     };
 
     // --- 2. MAP SETUP ---
-    var map = L.map('map', { zoomControl: false, measureControl: true }).setView([10.738501928736335, 106.83312465486868], 14);
+    var map = L.map('map', { zoomControl: false, measureControl: true }).setView([10.738501928736335, 106.83312465486868], 15);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
     map.createPane('polygonsPane'); map.getPane('polygonsPane').style.zIndex = 400;
