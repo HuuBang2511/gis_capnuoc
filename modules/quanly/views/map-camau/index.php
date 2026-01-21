@@ -124,7 +124,7 @@ $this->title = 'Bản đồ GIS - Quản lý Hạ tầng';
     <div class="gis-sidebar" id="sidebar">
         <div class="sidebar-header">
             <!-- Đã thêm thẻ a bọc tiêu đề để quay về trang chủ -->
-            <a href="http://localhost/gis_capnuoc/web/" class="home-link" title="Quay về trang chủ">
+            <a href="https://hpngis.com" class="home-link" title="Quay về trang chủ">
                 <h5><i class="fa fa-map-marked-alt mr-2"></i> GIS HẠ TẦNG</h5>
             </a>
             <button class="btn btn-sm text-white d-md-none" onclick="toggleSidebar()"><i class="fa fa-times"></i></button>
@@ -273,7 +273,7 @@ $this->title = 'Bản đồ GIS - Quản lý Hạ tầng';
     };
 
     // --- 2. MAP SETUP ---
-    var map = L.map('map', { zoomControl: false, measureControl: true }).setView([10.762622, 106.660172], 14);
+    var map = L.map('map', { zoomControl: false, measureControl: true }).setView([10.738501928736335, 106.83312465486868], 14);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
     map.createPane('polygonsPane'); map.getPane('polygonsPane').style.zIndex = 400;
