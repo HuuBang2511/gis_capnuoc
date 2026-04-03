@@ -418,7 +418,7 @@ body { overflow: hidden; }
         <div class="tl-header">
             <div class="tl-logo"><i class="fa fa-map"></i></div>
             <div class="tl-title">
-                <h1>Khu đô thị mới Đông Tăng Long</h1>
+                <h1>KĐT mới Đông Tăng Long</h1>
                 <span>Quản lý hạ tầng đô thị</span>
             </div>
             <div class="tl-header-actions">
