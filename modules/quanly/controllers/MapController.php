@@ -11,6 +11,13 @@ use app\modules\quanly\models\tanglong\KdtCayxanh;
 use app\modules\quanly\models\tanglong\KdtChieusang;
 use app\modules\quanly\models\tanglong\KdtGiaothong;
 use app\modules\quanly\models\tanglong\KdtHathe;
+use app\modules\quanly\models\swanbay\SbBaseCaodo;
+use app\modules\quanly\models\swanbay\SbBaseGiaothong as SbGiaothong;
+use app\modules\quanly\models\swanbay\SbBaseThuadat as SbThuadat;
+use app\modules\quanly\models\swanbay\SbBaseThuyhe;
+use app\modules\quanly\models\swanbay\SbNetworkOngphanphoi;
+use app\modules\quanly\models\swanbay\SbNetworkTrucuuhoa;
+use app\modules\quanly\models\swanbay\SbNetworkVan;
 use yii\db\Expression;
 
 class MapController extends QuanlyBaseController
@@ -49,6 +56,37 @@ class MapController extends QuanlyBaseController
         ];
 
         return $this->render('tanglong', [
+            'layers' => $layers,
+        ]);
+    }
+
+    public function actionSwanbay()
+    {
+        $layers = [
+            'thuadat' => $this->buildGeoJson(SbThuadat::class, [
+                'id', 'objectid', 'sothua', 'soto', 'chusohuu', 'quyhoach', 'shape_leng', 'shape_area',
+            ]),
+            'thuyhe' => $this->buildGeoJson(SbBaseThuyhe::class, [
+                'id', 'objectid', 'shape_leng', 'shape_area',
+            ]),
+            'giaothong' => $this->buildGeoJson(SbGiaothong::class, [
+                'id', 'objectid', 'loaimat', 'shape_leng', 'shape_area',
+            ]),
+            'ongphanphoi' => $this->buildGeoJson(SbNetworkOngphanphoi::class, [
+                'id', 'objectid', 'vatlieu', 'coong', 'chieudai', 'shape_leng',
+            ]),
+            'trucuuhoa' => $this->buildGeoJson(SbNetworkTrucuuhoa::class, [
+                'id', 'objectid', 'loaitru', 'vatlieu', 'cotru',
+            ]),
+            'van' => $this->buildGeoJson(SbNetworkVan::class, [
+                'id', 'objectid', 'vatlieu', 'covan',
+            ]),
+            'caodo' => $this->buildGeoJson(SbBaseCaodo::class, [
+                'id', 'objectid', 'caodo',
+            ]),
+        ];
+
+        return $this->render('swanbay', [
             'layers' => $layers,
         ]);
     }
