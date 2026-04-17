@@ -26,6 +26,8 @@ class MapController extends QuanlyBaseController
     //  BẢN ĐỒ KĐT TÂN LONG
     // ──────────────────────────────────────────────────────────────
 
+	public $layout = '@app/views/layouts/map/main';
+
     public function actionTanglong()
     {
         $layers = [
