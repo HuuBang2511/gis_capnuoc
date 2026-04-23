@@ -398,6 +398,16 @@ body { overflow: hidden; }
 .leaflet-control-attribution { background: rgba(13,17,23,0.7) !important; color: var(--text-muted) !important; font-size: 9px !important; }
 .leaflet-control-attribution a { color: var(--text-muted) !important; }
 
+.thuadat-static-label {
+    background: transparent;
+    border: none;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
     .tl-sidebar { position: absolute; height: 100%; transform: translateX(-100%); width: 88%; z-index: 1002; }
@@ -799,6 +809,7 @@ const SAT_LAYER = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/servi
 // Layers store
 const layers = {};
 const opacityStore = {};
+const thuadatLabels = L.layerGroup();
 
 // ═══════════════════════════════════════════════════════════
 //  HELPERS
@@ -927,6 +938,34 @@ function initLayer(key, data) {
         }
     }).addTo(map);
 
+    if (key === 'thuadat') {
+        layers[key].eachLayer(layer => {
+            if (layer.feature.properties && layer.feature.properties.so_thua) {
+                let center;
+                if (layer.getBounds) {
+                    center = layer.getBounds().getCenter();
+                } else if (layer.getLatLng) {
+                    center = layer.getLatLng();
+                }
+                if (center) {
+                    L.marker(center, {
+                        icon: L.divIcon({
+                            className: 'thuadat-static-label',
+                            html: `<span style="font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--text-primary);text-shadow:1px 1px 2px var(--bg-800),-1px -1px 2px var(--bg-800),1px -1px 2px var(--bg-800),-1px 1px 2px var(--bg-800);">${layer.feature.properties.so_thua}</span>`,
+                            iconSize: [40, 20],
+                            iconAnchor: [20, 10]
+                        }),
+                        interactive: false
+                    }).addTo(thuadatLabels);
+                }
+            }
+        });
+        const chk = document.getElementById('chk_thuadat');
+        if (chk && chk.checked && map.getZoom() >= 20) {
+            map.addLayer(thuadatLabels);
+        }
+    }
+
     opacityStore[key] = 1.0;
 }
 
@@ -1039,6 +1078,13 @@ function toggleExpand(id, btn) {
 function toggleLayer(key, on) {
     if (!layers[key]) return;
     on ? map.addLayer(layers[key]) : map.removeLayer(layers[key]);
+    if (key === 'thuadat') {
+        if (on && map.getZoom() >= 20) {
+            map.addLayer(thuadatLabels);
+        } else {
+            map.removeLayer(thuadatLabels);
+        }
+    }
 }
 
 function setOpacity(key, val, input) {
@@ -1116,6 +1162,14 @@ map.on('mousemove', e => {
 });
 map.on('zoomend', () => {
     document.getElementById('zoomDisplay').textContent = 'Zoom: ' + map.getZoom();
+    const chk = document.getElementById('chk_thuadat');
+    if (chk && chk.checked) {
+        if (map.getZoom() >= 20) {
+            if (!map.hasLayer(thuadatLabels)) map.addLayer(thuadatLabels);
+        } else {
+            if (map.hasLayer(thuadatLabels)) map.removeLayer(thuadatLabels);
+        }
+    }
 });
 
 // ═══════════════════════════════════════════════════════════

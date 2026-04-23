@@ -14,8 +14,11 @@ use Yii;
  * @property float|null $shape_area
  * @property string|null $sothua
  * @property string|null $soto
+ * @property string|null $sonha
+ * @property string|null $diachi
  * @property string|null $chusohuu
  * @property string|null $quyhoach
+ * @property string|null $image
  */
 class SbBaseThuadat extends \yii\db\ActiveRecord
 {
@@ -40,8 +43,11 @@ class SbBaseThuadat extends \yii\db\ActiveRecord
             [['shape_leng', 'shape_area'], 'number'],
             [['sothua'], 'string', 'max' => 25],
             [['soto'], 'string', 'max' => 5],
+            [['sonha'], 'string', 'max' => 50],
+            [['diachi'], 'string', 'max' => 255],
             [['chusohuu'], 'string', 'max' => 100],
             [['quyhoach'], 'string', 'max' => 50],
+            [['image'], 'string'],
             [['id'], 'unique'],
         ];
     }
@@ -59,8 +65,11 @@ class SbBaseThuadat extends \yii\db\ActiveRecord
             'shape_area' => Yii::t('app', 'Shape Area'),
             'sothua' => Yii::t('app', 'Sothua'),
             'soto' => Yii::t('app', 'Soto'),
+            'sonha' => Yii::t('app', 'Sonha'),
+            'diachi' => Yii::t('app', 'Diachi'),
             'chusohuu' => Yii::t('app', 'Chusohuu'),
             'quyhoach' => Yii::t('app', 'Quyhoach'),
+            'image' => Yii::t('app', 'Hình ảnh'),
         ];
     }
 }

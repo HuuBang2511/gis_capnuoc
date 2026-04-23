@@ -19,9 +19,23 @@ use app\modules\quanly\models\swanbay\SbNetworkOngphanphoi;
 use app\modules\quanly\models\swanbay\SbNetworkTrucuuhoa;
 use app\modules\quanly\models\swanbay\SbNetworkVan;
 use yii\db\Expression;
+use yii\web\Response;
+use yii\web\UploadedFile;
 
 class MapController extends QuanlyBaseController
 {
+    /**
+     * Tắt CSRF cho các API action SwanBay
+     */
+    public function beforeAction($action)
+    {
+        $noCsrfActions = ['swanbay-update', 'swanbay-upload', 'swanbay-delete-image'];
+        if (in_array($action->id, $noCsrfActions)) {
+            $this->enableCsrfValidation = false;
+        }
+        return parent::beforeAction($action);
+    }
+
     // ──────────────────────────────────────────────────────────────
     //  BẢN ĐỒ KĐT TÂN LONG
     // ──────────────────────────────────────────────────────────────
@@ -66,7 +80,7 @@ class MapController extends QuanlyBaseController
     {
         $layers = [
             'thuadat' => $this->buildGeoJson(SbThuadat::class, [
-                'id', 'objectid', 'sothua', 'soto', 'chusohuu', 'quyhoach', 'shape_leng', 'shape_area',
+                'id', 'objectid', 'sothua', 'soto', 'sonha', 'diachi', 'chusohuu', 'quyhoach', 'image', 'shape_leng', 'shape_area',
             ]),
             'thuyhe' => $this->buildGeoJson(SbBaseThuyhe::class, [
                 'id', 'objectid', 'shape_leng', 'shape_area',
@@ -91,6 +105,188 @@ class MapController extends QuanlyBaseController
         return $this->render('swanbay', [
             'layers' => $layers,
         ]);
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    //  CẬP NHẬT THỬA ĐẤT SWANBAY
+    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * API: Cập nhật thông tin thửa đất SwanBay
+     */
+    public function actionSwanbayUpdate()
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!\Yii::$app->request->isPost) {
+            return ['success' => false, 'message' => 'Phương thức không hợp lệ'];
+        }
+
+        $id = \Yii::$app->request->post('id');
+        if (!$id) {
+            return ['success' => false, 'message' => 'Thiếu ID'];
+        }
+
+        $model = SbThuadat::findOne($id);
+        if (!$model) {
+            return ['success' => false, 'message' => 'Không tìm thấy thửa đất'];
+        }
+
+        $fields = ['sothua', 'soto', 'sonha', 'diachi', 'chusohuu', 'quyhoach', 'shape_area'];
+        foreach ($fields as $field) {
+            $value = \Yii::$app->request->post($field);
+            if ($value !== null) {
+                $model->$field = $value;
+            }
+        }
+
+        if ($model->save(false)) {
+            return ['success' => true, 'message' => 'Cập nhật thành công'];
+        }
+
+        return ['success' => false, 'message' => 'Lỗi khi lưu', 'errors' => $model->errors];
+    }
+
+    /**
+     * API: Upload hình ảnh cho thửa đất SwanBay (Hỗ trợ nhiều ảnh)
+     */
+    public function actionSwanbayUpload()
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $id = \Yii::$app->request->post('id');
+        if (!$id) {
+            return ['success' => false, 'message' => 'Thiếu ID'];
+        }
+
+        $model = SbThuadat::findOne($id);
+        if (!$model) {
+            return ['success' => false, 'message' => 'Không tìm thấy thửa đất'];
+        }
+
+        $uploadDir = \Yii::getAlias('@webroot') . '/resources/uploads/swanbay';
+        if (!is_dir($uploadDir)) {
+            @mkdir($uploadDir, 0755, true);
+        }
+
+        $files = UploadedFile::getInstancesByName('image');
+        if (empty($files)) {
+            return ['success' => false, 'message' => 'Không có tệp hình ảnh'];
+        }
+
+        // Get existing images
+        $currentImages = [];
+        if (!empty($model->image)) {
+            $decoded = json_decode($model->image, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $currentImages = $decoded;
+            } else {
+                // Handle old single string format
+                $currentImages = [$model->image];
+            }
+        }
+
+        $allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg', 'ico'];
+        $uploadedPaths = [];
+        $errors = [];
+
+        foreach ($files as $file) {
+            $ext = strtolower($file->extension);
+            if (!in_array($ext, $allowedExt)) {
+                $errors[] = "Tệp {$file->name} không được hỗ trợ.";
+                continue;
+            }
+
+            // Clean original filename and add timestamp+random for uniqueness among multiple files
+            $cleanBaseName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $file->baseName);
+            $fileName = $cleanBaseName . '_' . $id . '_' . uniqid() . '.' . $ext;
+            $filePath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+
+            if ($file->saveAs($filePath)) {
+                $webPath = \Yii::$app->request->baseUrl . '/resources/uploads/swanbay/' . $fileName;
+                $uploadedPaths[] = $webPath;
+            } else {
+                $errors[] = "Lỗi khi lưu tệp {$file->name}.";
+            }
+        }
+
+        if (!empty($uploadedPaths)) {
+            $currentImages = array_merge($currentImages, $uploadedPaths);
+            $model->image = json_encode($currentImages);
+            $model->save(false);
+            
+            return [
+                'success' => true, 
+                'message' => 'Upload thành công', 
+                'images' => $currentImages,
+                'errors' => $errors
+            ];
+        }
+
+        return ['success' => false, 'message' => 'Không có tệp nào được lưu', 'errors' => $errors];
+    }
+
+    /**
+     * API: Xóa hình ảnh thửa đất SwanBay
+     */
+    public function actionSwanbayDeleteImage()
+    {
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $id = \Yii::$app->request->post('id');
+        $imagePath = \Yii::$app->request->post('image_path'); // Specific image to delete
+        
+        if (!$id) {
+            return ['success' => false, 'message' => 'Thiếu ID'];
+        }
+
+        $model = SbThuadat::findOne($id);
+        if (!$model) {
+            return ['success' => false, 'message' => 'Không tìm thấy thửa đất'];
+        }
+
+        if (empty($model->image)) {
+            return ['success' => true, 'message' => 'Không có ảnh để xóa'];
+        }
+
+        $currentImages = [];
+        $decoded = json_decode($model->image, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            $currentImages = $decoded;
+        } else {
+            $currentImages = [$model->image];
+        }
+
+        $uploadDir = \Yii::getAlias('@webroot') . '/resources/uploads/swanbay';
+
+        if ($imagePath) {
+            // Delete a specific image
+            $index = array_search($imagePath, $currentImages);
+            if ($index !== false) {
+                $fileName = basename($imagePath);
+                $fullPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+                if (file_exists($fullPath)) {
+                    @unlink($fullPath);
+                }
+                unset($currentImages[$index]);
+                $currentImages = array_values($currentImages); // Reset index
+            }
+        } else {
+            // Delete all images
+            foreach ($currentImages as $path) {
+                $fileName = basename($path);
+                $fullPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+                if (file_exists($fullPath)) {
+                    @unlink($fullPath);
+                }
+            }
+            $currentImages = [];
+        }
+
+        $model->image = empty($currentImages) ? null : json_encode($currentImages);
+        $model->save(false);
+
+        return ['success' => true, 'message' => 'Đã xóa hình ảnh', 'images' => $currentImages];
     }
 
     // ──────────────────────────────────────────────────────────────
