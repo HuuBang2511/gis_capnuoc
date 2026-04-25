@@ -244,7 +244,7 @@ body{overflow:hidden;font-family:'Be Vietnam Pro',sans-serif}
         <?php foreach ($layerMeta as $key => $cfg): $dot = $cfg['type'] === 'polygon' ? 'polygon' : ($cfg['type'] === 'line' ? 'line' : ''); ?>
           <div class="layer-item" style="--layer-color: <?= $cfg['color'] ?>">
             <div class="layer-row">
-              <label class="toggle"><input type="checkbox" checked onchange="toggleLayer('<?= $key ?>',this.checked)"><span class="slider"></span></label>
+              <label class="toggle"><input type="checkbox" <?= $key === 'thuadat' ? 'checked' : '' ?> onchange="toggleLayer('<?= $key ?>',this.checked)"><span class="slider"></span></label>
               <div class="layer-dot <?= $dot ?>"></div>
               <div class="layer-meta"><div class="layer-name"><?= $cfg['label'] ?></div><div class="layer-count" id="cnt_<?= $key ?>">0 đối tượng</div></div>
               <span style="cursor:pointer;color:var(--muted)" onclick="toggleExpand('<?= $key ?>_extra',this)"><i class="fa fa-chevron-down"></i></span>
@@ -452,7 +452,11 @@ function initLayer(key, data) {
                 layer.bindTooltip(String(props.sothua), { direction: 'center' });
             }
         }
-    }).addTo(map);
+    });
+
+		if (key === 'thuadat') {
+    layers[key].addTo(map);
+}
     updateCount(key, data.features.length);
 }
 

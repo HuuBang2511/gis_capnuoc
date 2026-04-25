@@ -492,7 +492,7 @@ body { overflow: hidden; }
                 <!-- Thửa đất -->
                 <div class="layer-item" style="--layer-color: var(--c-thuadat)">
                     <div class="layer-row">
-                        <label class="layer-toggle"><input type="checkbox" id="chk_thuadat" checked onchange="toggleLayer('thuadat',this.checked)"><span class="toggle-slider"></span></label>
+                        <label class="layer-toggle"><input type="checkbox" id="chk_thuadat"  onchange="toggleLayer('thuadat',this.checked)"><span class="toggle-slider"></span></label>
                         <div class="layer-dot polygon" style="--layer-color:var(--c-thuadat)"></div>
                         <div class="layer-meta"><div class="layer-name">Thửa đất</div><div class="layer-count" id="cnt_thuadat">0 đối tượng</div></div>
                         <span class="layer-expand-btn" onclick="toggleExpand('thuadat_extra',this)"><i class="fa fa-chevron-down"></i></span>
@@ -509,7 +509,7 @@ body { overflow: hidden; }
                 <!-- Giao thông -->
                 <div class="layer-item" style="--layer-color: var(--c-giaothong)">
                     <div class="layer-row">
-                        <label class="layer-toggle"><input type="checkbox" id="chk_giaothong" checked onchange="toggleLayer('giaothong',this.checked)"><span class="toggle-slider"></span></label>
+                        <label class="layer-toggle"><input type="checkbox" id="chk_giaothong" onchange="toggleLayer('giaothong',this.checked)"><span class="toggle-slider"></span></label>
                         <div class="layer-dot line" style="background:var(--c-giaothong)"></div>
                         <div class="layer-meta"><div class="layer-name">Giao thông</div><div class="layer-count" id="cnt_giaothong">0 đối tượng</div></div>
                         <span class="layer-expand-btn" onclick="toggleExpand('giaothong_extra',this)"><i class="fa fa-chevron-down"></i></span>
@@ -526,7 +526,7 @@ body { overflow: hidden; }
                 <!-- Cấp nước -->
                 <div class="layer-item" style="--layer-color: var(--c-capnuoc)">
                     <div class="layer-row">
-                        <label class="layer-toggle"><input type="checkbox" id="chk_capnuoc" checked onchange="toggleLayer('capnuoc',this.checked)"><span class="toggle-slider"></span></label>
+                        <label class="layer-toggle"><input type="checkbox" id="chk_capnuoc" onchange="toggleLayer('capnuoc',this.checked)"><span class="toggle-slider"></span></label>
                         <div class="layer-dot line" style="background:var(--c-capnuoc)"></div>
                         <div class="layer-meta"><div class="layer-name">Cấp nước</div><div class="layer-count" id="cnt_capnuoc">0 đối tượng</div></div>
                         <span class="layer-expand-btn" onclick="toggleExpand('capnuoc_extra',this)"><i class="fa fa-chevron-down"></i></span>
@@ -543,7 +543,7 @@ body { overflow: hidden; }
                 <!-- Hạ thế -->
                 <div class="layer-item" style="--layer-color: var(--c-hathe)">
                     <div class="layer-row">
-                        <label class="layer-toggle"><input type="checkbox" id="chk_hathe" checked onchange="toggleLayer('hathe',this.checked)"><span class="toggle-slider"></span></label>
+                        <label class="layer-toggle"><input type="checkbox" id="chk_hathe"  onchange="toggleLayer('hathe',this.checked)"><span class="toggle-slider"></span></label>
                         <div class="layer-dot line" style="background:var(--c-hathe)"></div>
                         <div class="layer-meta"><div class="layer-name">Hạ thế</div><div class="layer-count" id="cnt_hathe">0 đối tượng</div></div>
                         <span class="layer-expand-btn" onclick="toggleExpand('hathe_extra',this)"><i class="fa fa-chevron-down"></i></span>
@@ -562,7 +562,7 @@ body { overflow: hidden; }
                 <!-- Trạm biến áp -->
                 <div class="layer-item" style="--layer-color: var(--c-trambiap)">
                     <div class="layer-row">
-                        <label class="layer-toggle"><input type="checkbox" id="chk_trambiap" checked onchange="toggleLayer('trambiap',this.checked)"><span class="toggle-slider"></span></label>
+                        <label class="layer-toggle"><input type="checkbox" id="chk_trambiap"  onchange="toggleLayer('trambiap',this.checked)"><span class="toggle-slider"></span></label>
                         <div class="layer-dot" style="background:var(--c-trambiap)"></div>
                         <div class="layer-meta"><div class="layer-name">Trạm biến áp</div><div class="layer-count" id="cnt_trambiap">0 đối tượng</div></div>
                         <span class="layer-expand-btn" onclick="toggleExpand('trambiap_extra',this)"><i class="fa fa-chevron-down"></i></span>
@@ -579,7 +579,7 @@ body { overflow: hidden; }
                 <!-- Cây xanh -->
                 <div class="layer-item" style="--layer-color: var(--c-cayxanh)">
                     <div class="layer-row">
-                        <label class="layer-toggle"><input type="checkbox" id="chk_cayxanh" checked onchange="toggleLayer('cayxanh',this.checked)"><span class="toggle-slider"></span></label>
+                        <label class="layer-toggle"><input type="checkbox" id="chk_cayxanh" onchange="toggleLayer('cayxanh',this.checked)"><span class="toggle-slider"></span></label>
                         <div class="layer-dot" style="background:var(--c-cayxanh)"></div>
                         <div class="layer-meta"><div class="layer-name">Cây xanh</div><div class="layer-count" id="cnt_cayxanh">0 đối tượng</div></div>
                         <span class="layer-expand-btn" onclick="toggleExpand('cayxanh_extra',this)"><i class="fa fa-chevron-down"></i></span>
@@ -596,7 +596,7 @@ body { overflow: hidden; }
                 <!-- Chiếu sáng -->
                 <div class="layer-item" style="--layer-color: var(--c-chieusang)">
                     <div class="layer-row">
-                        <label class="layer-toggle"><input type="checkbox" id="chk_chieusang" checked onchange="toggleLayer('chieusang',this.checked)"><span class="toggle-slider"></span></label>
+                        <label class="layer-toggle"><input type="checkbox" id="chk_chieusang"  onchange="toggleLayer('chieusang',this.checked)"><span class="toggle-slider"></span></label>
                         <div class="layer-dot" style="background:var(--c-chieusang)"></div>
                         <div class="layer-meta"><div class="layer-name">Chiếu sáng</div><div class="layer-count" id="cnt_chieusang">0 đối tượng</div></div>
                         <span class="layer-expand-btn" onclick="toggleExpand('chieusang_extra',this)"><i class="fa fa-chevron-down"></i></span>
@@ -936,7 +936,11 @@ function initLayer(key, data) {
                 );
             }
         }
-    }).addTo(map);
+    });
+
+	if (key === 'thuadat') {
+    layers[key].addTo(map);
+}
 
     if (key === 'thuadat') {
         layers[key].eachLayer(layer => {
