@@ -49,13 +49,13 @@ class MapController extends QuanlyBaseController
                 'id', 'Shape_Leng',
             ]),
             'thuadat'   => $this->buildGeoJson(KdtThuadat::class, [
-                'id', 'loai_dat', 'so_thua', 'tinhhinh_xd', 'chu_ho', 'Shape_Leng', 'Shape_Area',
+                'id', 'loai_dat', 'so_thua', 'tinhhinh_xd', 'chu_ho',
             ]),
             'giaothong' => $this->buildGeoJson(KdtGiaothong::class, [
-                'id', 'name', 'fclass', 'oneway', 'maxspeed', 'bridge', 'tunnel', 'Shape_Leng',
+                'id', 'name', 'fclass', 'oneway', 'maxspeed', 'bridge', 'tunnel',
             ]),
             'capnuoc'   => $this->buildGeoJson(KdtCapnuoc::class, [
-                'id', 'Layer', 'Linetype',
+                'id',
             ]),
             'hathe'     => $this->buildGeoJson(KdtHathe::class, [
                 'id', 'ma',
